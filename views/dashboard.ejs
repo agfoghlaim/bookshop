@@ -1,0 +1,32 @@
+<h1>Dashboard</h1>
+<p>Welcome <%= user.name %></p>
+<% include ./partials/messages %>
+
+
+<div class="container">
+  <div class="row">
+
+    <!-- all books by this user (from json) -->
+    <div class="col-md-6">
+      <h2>All your books</h2>
+      <% usersBooks.forEach(function(b){ %>
+        <h5><%= b.title %><small> by 
+        <%= b.author %></small></h5>
+        <p><%= b.description %></p>
+        <p>Price: <%= b.price || 'no price listed' %></p>
+        <a href="/deleteBook/<%= b.id %>" class="btn btn-danger">Delete</a>
+        <a href="/editJsonBook/<%= b.id %>" class="btn btn-info">Edit</a>
+      
+      <% }) %>
+        
+    </div>
+
+    <!-- books for sale from this user (sql) -->
+    <div class="col-md-6">
+      <h2>Your Books for sale</h2>
+      <p>add here from sql db</p>
+    </div>
+  </div>
+</div>
+
+<a href="/users/logout">Logout</a>

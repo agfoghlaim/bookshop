@@ -1,0 +1,49 @@
+<div class="container" >
+  <% include ./partials/messages %>
+</div>
+
+<section class="edit-product-section">
+    <div class="container">
+        <h4>Fill out the form below or enter the isbn of your book to prepopulate form with data from Google Books </h4>
+        <label for="isbn-in">Isbn</label>
+        <input type="text" id="isbn-in" value="9781782166337">
+        <button id="btn">get info</button>
+      
+        <% theBook.forEach(function(b){ %>
+  
+        <form action="/editJsonBook/<%= b.id %>" method="post">
+          <div class="form-group">
+              <label for="exampleFormControlFile1">Example file input</label><br>
+              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+            </div>
+  
+  
+          <img src="" alt="" id="thumb">
+          <br><br>
+          <div class="form-group">
+              <label for="comment">Title:</label><br>
+              <input type="text" id="title" name="title" value="<%= b.title %>">
+          </div>
+          <div class="form-group">
+              <label for="comment">Author:</label><br>
+              <input type="text" name="author" id="author" value="<%= b.author %>">
+          </div>
+          <div class="form-group">
+              <label for="comment">Description:</label><br>
+              <textarea class="form-control" rows="15" type="textarea" name="description" id="description" value="<%= b.description %>"><%= b.description %></textarea>
+          </div>
+
+          <div class="form-group">
+              <label for="price">Price:</label><br>
+              <input class="form-control" rows="15" type="text" name="price" id="price" value="<%= b.price %>">
+          </div>
+        
+          <input type="submit" value="Save">
+  
+        </form> 
+
+        <% }) %>
+      </div>
+</section>
+
+ 
