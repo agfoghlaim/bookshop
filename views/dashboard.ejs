@@ -16,6 +16,7 @@
         <p>Price: <%= b.price || 'no price listed' %></p>
         <a href="/deleteBook/<%= b.id %>" class="btn btn-danger">Delete</a>
         <a href="/editJsonBook/<%= b.id %>" class="btn btn-info">Edit</a>
+        <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Sell</a>
       
       <% }) %>
         

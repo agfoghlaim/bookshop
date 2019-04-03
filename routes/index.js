@@ -115,11 +115,15 @@ router.post('/editJsonBook/:id', (req, res)=>{
 //===================================================================
 
 router.post('/addBook', (req,res) =>{
-  let {title, author, description, price} = req.body;//get details from req.body
+  let {title, author, description, userReview, condition, price} = req.body;//get details from req.body
+  console.log("here: ", req.body)
   const newBook = {
     title, 
     author, 
-    description, 
+    description,
+    userReview,
+    condition, 
+    forSale: false,
     price: parseInt(price), 
     id: helpers.getMaxId(books) +1, //get current max id from json file
     userID: req.user.id //add product page protected to avoid errors here (ie when user is not logged in req.user is not defined)

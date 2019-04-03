@@ -6,6 +6,8 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 
+//SQL middleware
+var mysql = require('mysql');
 
 
 const app = express();
@@ -27,6 +29,14 @@ app.set('view engine', 'ejs');
 
 //clientside js
 app.use(express.static('js'));
+
+//use local phpmyadmin
+const sqldb = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'bookshop'
+});
 
 //bodyparser (to use req.body)
 app.use(express.urlencoded({extended: false}));
@@ -58,6 +68,17 @@ app.use((req, res, next) =>{
   next();
 });
 
+
+//connect to db
+//connected or not?
+sqldb.connect(err =>{
+  if(err){
+    console.log("sql connection error...");
+  }else{
+    console.log("sql db ok...");
+  }
+})
+
 //routes
 
 //for home route, use index.js
@@ -65,6 +86,9 @@ app.use('/', require('./routes/index'));
 
 //for user related routes, use user.js
 app.use('/users', require('./routes/users'));
+
+//for shop/sql related routes, use shop.js
+app.use('/shop', require('./routes/shop'));
 
 const PORT =process.env.PORT || 5000;
 
