@@ -47,9 +47,10 @@ module.exports = {
   sellBook: function(book, db){
     return new Promise((resolve,reject)=>{
       let sql = 'INSERT INTO books set ?';
+      console.log(book)
       let query = db.query(sql,book, (err,res)=>{
         if(err){
-          reject('db error saving book')
+          reject(err)
         }else{
           resolve(res)
         }

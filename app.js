@@ -30,6 +30,9 @@ app.set('view engine', 'ejs');
 //clientside js
 app.use(express.static('js'));
 
+//css
+app.use(express.static('css'));
+
 //use local phpmyadmin
 const sqldb = mysql.createConnection({
   host: 'localhost',

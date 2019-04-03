@@ -35,7 +35,7 @@ router.get('/dashboard', ensureAuthenticated, (req,res) => {
 
     theBooks = JSON.parse(data);
     usersBooks = theBooks.filter(b => b.userID === req.user.id)
-    console.log("users books length ", usersBooks.length)
+    //console.log("users books length ", usersBooks.length)
     res.render('dashboard', {usersBooks})
   });
   
@@ -92,6 +92,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
   const idToFind = parseInt(req.params.id);
   let updatedBook = {title, author, description, price:parseInt(price), id:parseInt(req.params.id), userID: req.user.id}
   let marie = books.map(b => b.id).indexOf(idToFind)
+  console.log("marie is ", marie)
   books.splice(marie,1, updatedBook);
   const updated = JSON.stringify(books, null ,4)
   
@@ -106,7 +107,36 @@ router.post('/editJsonBook/:id', (req, res)=>{
   })  
 })
 
+//================================================
+// try to computer edit a book by sending dets in params
+//eg /editJsonBook/49/condition/mediocre
+//changes condition of book with id 49 to 'mediocre'
+//=====================================================
+router.get('/editJsonBook/:id/:field/:thevalue', (req, res)=>{
 
+  const idToFind = parseInt(req.params.id);
+  
+  let bookIndex = books.map(b =>b.id).indexOf(idToFind)
+
+  let updatedBook = books[bookIndex];
+
+  //set the relevent book's relevant field to thevalue
+
+  updatedBook[`${req.params.field}`] = req.params.thevalue;
+  
+  books.splice(bookIndex, 1, updatedBook);
+  const updated = JSON.stringify(books, null ,4)
+  
+  fs.writeFile('./models/books.json', updated, 'utf8', err =>{
+    if(err) {
+      req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
+      res.redirect('/dashboard')
+    }else{
+      req.flash("success_msg", `${updatedBook.title} edited successfully.` );
+      res.redirect('/dashboard')
+    }
+  })  
+})
 
 //===================================================================
 

@@ -51,6 +51,8 @@ sqldb.connect(err =>{
   }
 })
 
+
+//add a book to sql db
 router.get('/addsqlbook/:id', (req,res)=>{
   //find (in the json) the book user wants to sell
   const theBook = books.filter(b=> b.id === parseInt(req.params.id))
@@ -83,31 +85,38 @@ router.get('/addsqlbook/:id', (req,res)=>{
     } 
     else{
       //if already saved, use the relevant authorID and add as Foreign Key field autherID in books table (via bookToAdd)
+      console.log("settin authorid")
       bookToAdd.authorID = a.authorID
     }
 
     //save the book
     let newBook = helpers.sellBook(bookToAdd, sqldb);
     newBook
-    .then(res => console.log("was the book saved?? ", res))
-    //.catch(err => console.log("error saving the book", err))
+    .then(res => {
+      console.log("book saved, updating forsale field in json")
+      //to update, can i send a request to here??
+      ///editJsonBook/:id
+      
+    })
+    .catch(err => console.log("error saving the book:", err))
     
-    res.send("ok")
+    //res.send("ok")
   
   }).catch(err=>console.log("A CATCH ERROR ",err))
 
   //At this point the author should 
   //Now save the book
-
+  res.redirect(`/editJsonBook/${req.params.id}/forSale/true`)
 })
 
 //get books in the db
-router.get('/sqlallbooks',(req,res)=>{
-  let sql = 'SELECT * FROM books';
+router.get('/sqlallusersbooks',(req,res)=>{
+  //let sql = 'SELECT * FROM books';
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = "${req.user.id}"`;
   let query = sqldb.query(sql, (err,result)=>{
     if(err) throw err;
-    console.log( "onnnnn ", res)
-    res.json(result)
+   // console.log( "onnnnn ", result)
+    res.send(result)
 
   })
 })
