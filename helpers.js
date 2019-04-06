@@ -1,7 +1,10 @@
 module.exports = {
   getMaxId: function(stuff){
     //return max id of stuff json array
-    console.log("stuff", stuff)
+    //console.log("stuff", stuff)
+    if(!stuff.length){
+      return 1;
+    }
     var max = stuff.reduce((prev, curr)=> prev.id > curr.id ? prev : curr);
     return max.id
   
