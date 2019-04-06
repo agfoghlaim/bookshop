@@ -1,10 +1,9 @@
-console.log("hiya from isbn js")
-
-
 const url = 'https://www.googleapis.com/books/v1/volumes?q=';
 const isbnBtn = document.querySelector('#btn');
-console.log(isbnBtn)
-isbnBtn.addEventListener('click', getInfo);
+if(isbnBtn){
+  isbnBtn.addEventListener('click', getInfo);
+}
+
 
 function getInfo(){
   let isbn = document.getElementById('isbn-in').value;

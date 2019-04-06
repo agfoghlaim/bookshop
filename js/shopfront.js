@@ -1,7 +1,9 @@
-console.log("hello from shop.js")
 
 const getAllBtn = document.getElementById('getallbooks');
-getAllBtn.addEventListener('click', getBooks);
+if(getAllBtn){
+  getAllBtn.addEventListener('click', getBooks);
+}
+
 const shopBooks = document.getElementById('shop-books');
 function getBooks(){
   fetch('/shop/sqlallusersbooks')

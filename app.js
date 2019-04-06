@@ -33,13 +33,15 @@ app.use(express.static('js'));
 //css
 app.use(express.static('css'));
 
-//use local phpmyadmin
-const sqldb = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'bookshop'
-});
+const theDb = require('./config/keys').sqlConnection;
+const sqldb = mysql.createConnection(theDb);
+// //use local phpmyadmin
+// const sqldb = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: '',
+//   database: 'bookshop'
+// });
 
 //bodyparser (to use req.body)
 app.use(express.urlencoded({extended: false}));
