@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
 const fs = require("fs");
+const sqldb = require('../config/db');
 
-var mysql = require('mysql');
 
 //marie's helpers/query file to keep it tidy
 const helpers = require('../helpers');
@@ -32,23 +32,6 @@ fs.watchFile('./models/books.json', (curr, prev) => {
   } 
 });
 
-//db credentials
-const sqldb = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'bookshop'
-});
-
-//connect to db
-sqldb.connect(err =>{
-  if(err){
-    //TODO nicer error handling for this
-    console.log("sql connection error...");
-  }else{
-    console.log("sql db ok...");
-  }
-})
 
 
 //add a book to sql db
@@ -108,18 +91,17 @@ router.get('/addsqlbook/:id', (req,res)=>{
     } 
     //if author is already in the db
     else{
-      //if already saved, use the relevant authorID and add as Foreign Key field autherID in books table (via bookToAdd)
-      console.log("settin authorid")
+      //if already saved, use the relevant authorID and add as Foreign Key field authorID in books table (via bookToAdd)
+     
       bookToAdd.authorID = a.authorID;
-
-      //and save the book
-                  //THEN save the book (this should be in a then)
-              let newBook = helpers.sellBook(bookToAdd, sqldb);
-              newBook
-              .then(res => {
-                console.log("author existed, book saved, will update forsale field in json next")      
-              })
-              .catch(err => console.log("error saving the book:", err))
+      
+      //THEN save the book 
+      let newBook = helpers.sellBook(bookToAdd, sqldb);
+      newBook
+      .then(res => {
+        console.log("author existed, book saved, will update forsale field in json next")      
+      })
+      .catch(err => console.log("error saving the book:", err))
     }
 
 
@@ -165,7 +147,7 @@ router.get('/sqlallusersbooks',(req,res)=>{
   let query = sqldb.query(sql, (err,result)=>{
     if(err) throw err;
 
-    //just send
+    //just send, client will deal with it
     res.send(result)
   })
 })
