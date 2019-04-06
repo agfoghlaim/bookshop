@@ -8,7 +8,7 @@ module.exports = {
   },
   isAuthorAlreadySaved: function(theBook,sqldb){
    return new Promise((resolve,reject)=>{
-    let sql = 'SELECT * from authors WHERE authorName LIKE "'+theBook[0].author+'";'
+    let sql = 'SELECT * from authors WHERE authorName = "'+theBook[0].author+'";'
     
     let query = sqldb.query(sql, (err, res) =>{
       if(err) reject('err');

@@ -129,10 +129,10 @@ router.get('/editJsonBook/:id/:field/:thevalue', (req, res)=>{
   
   fs.writeFile('./models/books.json', updated, 'utf8', err =>{
     if(err) {
-      req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
+      req.flash("error_msg", `There was a problem adding ${updatedBook.title} to your sale items.` );
       res.redirect('/dashboard')
     }else{
-      req.flash("success_msg", `${updatedBook.title} edited successfully.` );
+      req.flash("success_msg", `${updatedBook.title} for sale.` );
       res.redirect('/dashboard')
     }
   })  
