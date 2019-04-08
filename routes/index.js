@@ -91,7 +91,8 @@ router.get('/editJsonBook/:id', (req,res)=>{
     return;
   }
   //find the correct book, render edit page, pass the book details
- let theBook = books.filter(b=>b.id === parseInt(req.params.id) && b.userID === req.user.id)
+ let theBook = books.filter(b=>b.id === parseInt(req.params.id) && b.userID === req.user.id);
+ console.log("thebook", theBook)
   res.render('editBookPage', {theBook})
 })
 
@@ -107,7 +108,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
   // "id": 83,
   // "userID": "5c9b80e97a2c192a4c3419fd"
 
-  const {title, author, description, price }= req.body;
+  const {title, author, description, price,userReview, condition }= req.body;
   const idToFind = parseInt(req.params.id);
   let updatedBook = {
     title, 
@@ -115,7 +116,9 @@ router.post('/editJsonBook/:id', (req, res)=>{
     description, 
     price:parseInt(price), 
     id:parseInt(req.params.id), 
-    userID: req.user.id
+    userID: req.user.id,
+    userReview,
+    condition
   }
 
   let i = books.map(b => b.id).indexOf(idToFind)

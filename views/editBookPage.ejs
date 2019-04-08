@@ -38,6 +38,19 @@
               <label for="price">Price:</label><br>
               <input class="form-control" rows="15" type="text" name="price" id="price" value="<%= b.price %>">
           </div>
+
+          <div class="form-group">
+            <label for="userReview">User Review:</label><br>
+            <textarea class="form-control" rows="15" type="textarea" name="userReview" id="userReview" value="<%= b.userReview %>"><%= b.userReview %></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="condition">Condition:</label><br>
+            <select class="form-control"  name="condition" id="condition" value="<%= b.condition %>">
+                <option value="good">Good</option>
+                <option value="bad">Bad</option>
+            </select>
+        </div>
         
           <input type="submit" value="Save">
   
