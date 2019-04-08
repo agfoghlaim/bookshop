@@ -8,6 +8,10 @@ const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
 const fs = require("fs");
 
+//to send post requests
+const querystring = require('querystring');
+const http = require('http');
+
 //marie's helpers file
 const helpers = require('../helpers');
 
@@ -97,49 +101,6 @@ router.get('/editJsonBook/:id', (req,res)=>{
 })
 
 
-// router.post('/editJsonBook/:id', (req, res)=>{
-
-
-//   const {title, author, description, price, userReview, condition }= req.body;
-//   const idToFind = parseInt(req.params.id);
-//   let updatedBook = {
-//     title, 
-//     author, 
-//     description, 
-//     price:parseInt(price), 
-//     id:parseInt(req.params.id), 
-//     userID: req.user.id,
-//     userReview,
-//     condition
-//   }
-
-//   let i = books.map(b => b.id).indexOf(idToFind)
-
-//   //splice the updated book and resave
-//   books.splice(i, 1, updatedBook);
-//   const updated = JSON.stringify(books, null ,4)
-  
-//   fs.writeFile('./models/books.json', updated, 'utf8', err =>{
-//     if(err) {
-//       req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
-//       res.redirect('/dashboard')
-//     }else{
-//       //
-//       //Syncronize the sql version (if there is one)
-//       //1. is forSale true?, AND does it have a shopID?
-//       //2. if so, update sql as well
-//       if(updated.shopID && (updated.forSale===true||updated.forSale==='true')){
-//         //need to update book in db too!!
-//         console.log("book is for sale, will update sql")
-//       }else{
-//         //not for sale, no need for sql
-//         console.log("this book is not for sale, done.")
-//       }
-//       req.flash("success_msg", `${updatedBook.title} edited successfully.` );
-//       res.redirect('/dashboard')
-//     }
-//   })  
-// })
 
 
 //====================================================
@@ -157,8 +118,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
   //get new copy of the json file
   const latestBooks = helpers.getLatestBooks();
   
-  //1. Find the relevant book
-  //2. Make the changes
+  //and then...
   latestBooks
   .then(books => {
 
@@ -183,23 +143,26 @@ router.post('/editJsonBook/:id', (req, res)=>{
 
     fs.writeFile('./models/books.json', updated, 'utf8', err =>{
         if(err) {
-          req.flash("error_msg", `There was a problem editing ${updated.title}` );
+          req.flash("error_msg", `There was a problem editing ${theBook.title}` );
           res.redirect('/dashboard')
         }else{
-          //
-          //console.log("do we have the book? ", theBook)
+      
           //Syncronize the sql version (if there is one)
           //1. is forSale true?, AND does it have a shopID?
           //2. if so, update sql as well
           if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
             //need to update book in db too!!
             console.log("book is for sale, will update sql")
+           const string = encodeURIComponent(JSON.stringify(theBook));
+            res.redirect('/shop/sqleditbook/?bookupdates=' + string);
+          
           }else{
             //not for sale, no need for sql
             console.log("this book is not for sale, done.")
           }
-          req.flash("success_msg", `${updated.title} edited successfully.` );
-          res.redirect('/dashboard')
+
+          req.flash("success_msg", `${theBook.title} edited successfully.` );
+          //res.redirect('/dashboard')
         }
       })
   })

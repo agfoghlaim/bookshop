@@ -5,6 +5,10 @@ const { ensureAuthenticated } = require('../config/auth');
 const fs = require("fs");
 const sqldb = require('../config/db');
 
+// //to send post requests
+// const querystring = require('querystring');
+// const http = require('http');
+
 
 //marie's helpers/query file to keep it tidy
 const helpers = require('../helpers');
@@ -169,5 +173,38 @@ router.post('/editsqlbook/:id',(req,res)=>{
   console.log("will edit")
 })
 
+
+//===========================================
+
+//EDIT sql book
+//(editjson book will redirect here before front end render)
+
+//===========================================
+
+router.get('/sqleditbook/', (req,res)=>{
+  //console.log(req.query.bookupdates);
+    const {title, author, description, price, userReview, condition,shopID }= JSON.parse(req.query.bookupdates);
+    
+  
+  //need to do the sql update
+  //then redirect? 
+  let sqlauthor = `UPDATE authors SET authorName="${author}" WHERE authorID = (SELECT authorID FROM books WHERE bookID=${shopID})`;
+
+  let sqlbook = `UPDATE books SET bookTitle="${title}", bookDescription="${description}", bookPrice="${price}", userReview="${userReview}", bookCondition="${condition}" WHERE bookID=${shopID}`;
+
+  let bothQueries= sqldb.query(`${sqlauthor}; ${sqlbook}`, (err,result,fields)=>{
+    if(err){
+      console.log(err); 
+      //throw err;
+      req.flash("error_msg", `Oops! ${title} not edited.` );
+      res.redirect('/dashboard')
+    }
+    //console.log("authorname updated", result[0])
+    //console.log("authorname updated", result[1])
+    req.flash("success_msg", `${title} edited successfully.` );
+    res.redirect('/dashboard')
+  })
+  
+})
 
 module.exports = router;
