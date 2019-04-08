@@ -1,7 +1,13 @@
+//========================================
+
+//This file contains routes for CRUDing books.json
+
+//==============================================
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
 const fs = require("fs");
+
 //marie's helpers file
 const helpers = require('../helpers');
 
@@ -11,6 +17,9 @@ fs.readFile('./models/books.json', (err,data)=>{
   if(err) throw err;
   books = JSON.parse(data);
 })
+
+//watch for changes to the json file
+books = helpers.watchBooks();
 
 //===================================================================
 
@@ -28,7 +37,7 @@ router.get('/', (req,res) => {
 //dashboard (when user signs in)
 router.get('/dashboard', ensureAuthenticated, (req,res) => { 
   //get all books from the json file with current user's id
-  //const theBooks = require('../models/books.json');
+
   let theBooks;
   fs.readFile('./models/books.json', (err,data)=>{
     if(err) throw err;
@@ -88,12 +97,31 @@ router.get('/editJsonBook/:id', (req,res)=>{
 
 router.post('/editJsonBook/:id', (req, res)=>{
 
+  // "title": "Snow2",
+  // "author": "Marie O Hara",
+  // "description": "dsf",
+  // "userReview": "sdf",
+  // "condition": "good",
+  // "forSale": "false",
+  // "price": 3,
+  // "id": 83,
+  // "userID": "5c9b80e97a2c192a4c3419fd"
+
   const {title, author, description, price }= req.body;
   const idToFind = parseInt(req.params.id);
-  let updatedBook = {title, author, description, price:parseInt(price), id:parseInt(req.params.id), userID: req.user.id}
-  let marie = books.map(b => b.id).indexOf(idToFind)
-  console.log("marie is ", marie)
-  books.splice(marie,1, updatedBook);
+  let updatedBook = {
+    title, 
+    author, 
+    description, 
+    price:parseInt(price), 
+    id:parseInt(req.params.id), 
+    userID: req.user.id
+  }
+
+  let i = books.map(b => b.id).indexOf(idToFind)
+
+  //splice the updated book and resave
+  books.splice(i, 1, updatedBook);
   const updated = JSON.stringify(books, null ,4)
   
   fs.writeFile('./models/books.json', updated, 'utf8', err =>{
@@ -101,6 +129,10 @@ router.post('/editJsonBook/:id', (req, res)=>{
       req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
       res.redirect('/dashboard')
     }else{
+      //
+      //Syncronize the sql version (if there is one)
+      //1. is forSale true?
+      //2. if so, update sql as well
       req.flash("success_msg", `${updatedBook.title} edited successfully.` );
       res.redirect('/dashboard')
     }
@@ -120,10 +152,10 @@ router.get('/editJsonBook/:id/:field/:thevalue', (req, res)=>{
 
   let updatedBook = books[bookIndex];
 
-  //set the relevent book's relevant field to thevalue
-
+  //set the relevent book's relevant field to thevalue passes in params
   updatedBook[`${req.params.field}`] = req.params.thevalue;
   
+  //and update the json
   books.splice(bookIndex, 1, updatedBook);
   const updated = JSON.stringify(books, null ,4)
   
@@ -146,7 +178,7 @@ router.get('/editJsonBook/:id/:field/:thevalue', (req, res)=>{
 
 router.post('/addBook', (req,res) =>{
   let {title, author, description, userReview, condition, price} = req.body;//get details from req.body
-  console.log("here: ", req.body)
+ 
   const newBook = {
     title, 
     author, 

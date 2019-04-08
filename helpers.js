@@ -1,3 +1,4 @@
+const fs = require("fs");
 module.exports = {
   getMaxId: function(stuff){
     //return max id of stuff json array
@@ -15,7 +16,7 @@ module.exports = {
     
     let query = sqldb.query(sql, (err, res) =>{
       if(err) reject('err');
-      console.log("res is ", res)
+      //console.log("res is ", res)
       if(!res.length){
         console.log("author doesnt exist")
         resolve(false)
@@ -50,7 +51,7 @@ module.exports = {
   sellBook: function(book, db){
     return new Promise((resolve,reject)=>{
       let sql = 'INSERT INTO books set ?';
-      console.log(book)
+     // console.log(book)
       let query = db.query(sql,book, (err,res)=>{
         if(err){
           reject(err)
@@ -59,6 +60,27 @@ module.exports = {
         }
       })
     })
+  },
+  watchBooks: function(){
+    fs.watchFile('./models/books.json', (curr, prev) => {
+      if(curr){
+        fs.readFile('./models/books.json', (err,data)=>{
+          if(err) throw err;
+          console.log("books updated (helper), bookslength: ",JSON.parse(data).length)
+          return JSON.parse(data);
+        })
+      } 
+    });
+  },
+  getLatestBooks: function(){
+    return new Promise((resolve,reject)=>{
+      fs.readFile('./models/books.json', (err,data)=>{
+        if(err) reject(err);
+        resolve(JSON.parse(data));
+       
+      })
+    })
+ 
   }
 
 

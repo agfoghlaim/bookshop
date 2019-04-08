@@ -10,7 +10,7 @@ const sqldb = require('../config/db');
 const helpers = require('../helpers');
 
 //get books data from json file (initially)
-let books;
+var books;
 fs.readFile('./models/books.json', (err,data)=>{
   if(err) throw err;
   books = JSON.parse(data);
@@ -19,97 +19,104 @@ fs.readFile('./models/books.json', (err,data)=>{
 
 
 //==================================================
-// watch for changes in the .json file and update the books variable everytime it changes
-//=================================================
 
-fs.watchFile('./models/books.json', (curr, prev) => {
-  if(curr){
-    fs.readFile('./models/books.json', (err,data)=>{
-      if(err) throw err;
-      books = JSON.parse(data);
-      console.log("books updated")
-    })
-  } 
-});
+// watch for changes in the .json file and update the books variable everytime it changes (Should not be in shop.js???)
+
+//=================================================
+//books = helpers.watchBooks();
+
+// fs.watchFile('./models/books.json', (curr, prev) => {
+//   if(curr){
+//     fs.readFile('./models/books.json', (err,data)=>{
+//       if(err) throw err;
+//       books = JSON.parse(data);
+//       console.log("books updated")
+//     })
+//   } 
+// });
 
 
 
 //add a book to sql db
 router.get('/addsqlbook/:id', (req,res)=>{
-  //find (in the json) the book user wants to sell
-  const theBook = books.filter(b=> b.id === parseInt(req.params.id))
+  
+ let books = helpers.getLatestBooks();
+  books.then(books =>{
+    //find (in the json) the book user wants to sell
+    const theBook = books.filter(b=>  b.id === parseInt(req.params.id))
 
-  //check forSale in json to make sure it's not already for sale
-  console.log("the book for sale : ", theBook.forSale)
-  if(theBook[0].forSale === true || theBook[0].forSale === "true"){
-    console.log("book already for sale");
-    req.flash("error_msg", `${theBook[0].title} is already for sale!` );
-    res.redirect('/dashboard');
-    return;
-  }
-
-  //details to save in sql db
-  let bookToAdd = {
-    isbn: '',
-    bookTitle: theBook[0].title,
-    bookImage: '',
-    bookDescription: theBook[0].description,
-    userID: req.user.id,
-    bookPrice: theBook[0].price,
-    authorID: '',
-    userReview: theBook[0].userReview,
-    userBookImage: '',
-    bookJsonID: theBook[0].id
-  }
-
-  //check if author is already saved in db?
-  let authorSaved =helpers.isAuthorAlreadySaved(theBook,sqldb)
-  authorSaved.then(a =>{
-    //if authornot saved, save it
-    if(!a){
-      //if not, save author
-      console.log("will save author too")
-      let saveauthor = helpers.saveAuthor(theBook[0].author, sqldb);
-      saveauthor
-      .then(res => {
-        //set the relevant authorID
-        bookToAdd.authorID = res.insertId;
-      })
-      .then(()=>{
-            //THEN save the book ()
-            let newBook = helpers.sellBook(bookToAdd, sqldb);
-            newBook
-            .then(res => {
-              console.log("book saved, updating forsale field in json")
-              //to update, can i send a request to here??
-              ///editJsonBook/:id
-              
-            })
-            .catch(err => console.log("error saving the book:", err))
-      })
-      .catch(err => console.log("problem"))
-    } 
-    //if author is already in the db
-    else{
-      //if already saved, use the relevant authorID and add as Foreign Key field authorID in books table (via bookToAdd)
-     
-      bookToAdd.authorID = a.authorID;
-      
-      //THEN save the book 
-      let newBook = helpers.sellBook(bookToAdd, sqldb);
-      newBook
-      .then(res => {
-        console.log("author existed, book saved, will update forsale field in json next")      
-      })
-      .catch(err => console.log("error saving the book:", err))
+    //is book already for sale?
+    if(theBook[0].forSale === true || theBook[0].forSale === "true"){
+      req.flash("error_msg", `${theBook[0].title} is already for sale!` );
+      res.redirect('/dashboard');
+      return;
     }
 
+     //details to save in sql db
+    let bookToAdd = {
+      isbn: '',
+      bookTitle: theBook[0].title,
+      bookImage: '',
+      bookDescription: theBook[0].description,
+      userID: req.user.id,
+      bookPrice: theBook[0].price,
+      authorID: '',
+      userReview: theBook[0].userReview,
+      userBookImage: '',
+      bookJsonID: theBook[0].id
+    }
 
-  
-  }).catch(err=>console.log("SAVING AUTHOR RELATED ERROR CAUGHT: ",err))
+    //check if author is already saved in db?
+    let authorSaved =helpers.isAuthorAlreadySaved(theBook,sqldb)
+    authorSaved.then(a =>{
+
+      //if authornot saved, save it
+      if(!a){
+        console.log("will save author too")
+        let saveauthor = helpers.saveAuthor(theBook[0].author, sqldb);
+        saveauthor
+        .then(res => {
+          //set the relevant authorID in the bookToAdd object
+          bookToAdd.authorID = res.insertId;
+        })
+        .then(()=>{
+              //THEN save the book 
+              let newBook = helpers.sellBook(bookToAdd, sqldb);
+              newBook
+              .then(res => {
+                console.log("book saved, will update forsale field in json")
+                //to update, can i send a request to here??
+                ///editJsonBook/:id
+                
+              })
+              .catch(err => console.log("error saving the book:", err))
+        })
+        .catch(err => console.log("problem"))
+      } 
+      //if author is already in the db
+      else{
+        //if already saved, use the relevant authorID and add as Foreign Key field authorID in books table (via bookToAdd)
+      
+        bookToAdd.authorID = a.authorID;
+        
+        //THEN save the book 
+        let newBook = helpers.sellBook(bookToAdd, sqldb);
+        newBook
+        .then(res => {
+          console.log("author existed, book saved, will update forsale field in json next")      
+        })
+        .catch(err => console.log("error saving the book:", err))
+      }
+
+
+    
+    }).catch(err=>console.log("SAVING AUTHOR RELATED ERROR CAUGHT: ",err))
 
   //now redirect where the json 'forSale' field will be set to true.
   res.redirect(`/editJsonBook/${req.params.id}/forSale/true`)
+
+  })//end of books.then, (ie get the latest json books, then do all this)
+   .catch(err=>console.log("Error: ",err)) 
 })
 
 //============================================================
@@ -118,7 +125,6 @@ router.get('/addsqlbook/:id', (req,res)=>{
 
 //=============================================
 router.get('/removeqlbook/:id', (req,res)=>{
-  console.log("will remove: ", req.params.id)
   let bookid = parseInt(req.params.id)
   let sql = `DELETE FROM books WHERE bookID = ${bookid};`;
   let query = sqldb.query(sql, (err,result)=>{
@@ -128,9 +134,9 @@ router.get('/removeqlbook/:id', (req,res)=>{
     //update json to not for sale
     //client side will have to call this route after it recieves this response!!
 
-    //redirect to get all books (front end fetch expects array of books)
+    //redirect to get all books (front end fetch expects array of books which will eventually be sent from /sqlaluserbooks)
     res.redirect('/shop/sqlallusersbooks')
-    //res.send(result)
+    
   })
 })
 
