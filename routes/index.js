@@ -92,54 +92,145 @@ router.get('/editJsonBook/:id', (req,res)=>{
   }
   //find the correct book, render edit page, pass the book details
  let theBook = books.filter(b=>b.id === parseInt(req.params.id) && b.userID === req.user.id);
- console.log("thebook", theBook)
+ //console.log("thebook", theBook)
   res.render('editBookPage', {theBook})
 })
 
+
+// router.post('/editJsonBook/:id', (req, res)=>{
+
+
+//   const {title, author, description, price, userReview, condition }= req.body;
+//   const idToFind = parseInt(req.params.id);
+//   let updatedBook = {
+//     title, 
+//     author, 
+//     description, 
+//     price:parseInt(price), 
+//     id:parseInt(req.params.id), 
+//     userID: req.user.id,
+//     userReview,
+//     condition
+//   }
+
+//   let i = books.map(b => b.id).indexOf(idToFind)
+
+//   //splice the updated book and resave
+//   books.splice(i, 1, updatedBook);
+//   const updated = JSON.stringify(books, null ,4)
+  
+//   fs.writeFile('./models/books.json', updated, 'utf8', err =>{
+//     if(err) {
+//       req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
+//       res.redirect('/dashboard')
+//     }else{
+//       //
+//       //Syncronize the sql version (if there is one)
+//       //1. is forSale true?, AND does it have a shopID?
+//       //2. if so, update sql as well
+//       if(updated.shopID && (updated.forSale===true||updated.forSale==='true')){
+//         //need to update book in db too!!
+//         console.log("book is for sale, will update sql")
+//       }else{
+//         //not for sale, no need for sql
+//         console.log("this book is not for sale, done.")
+//       }
+//       req.flash("success_msg", `${updatedBook.title} edited successfully.` );
+//       res.redirect('/dashboard')
+//     }
+//   })  
+// })
+
+
+//====================================================
+
+//EDIT JSON BOOK rewrite
+
+//=====================================================
 router.post('/editJsonBook/:id', (req, res)=>{
 
-  // "title": "Snow2",
-  // "author": "Marie O Hara",
-  // "description": "dsf",
-  // "userReview": "sdf",
-  // "condition": "good",
-  // "forSale": "false",
-  // "price": 3,
-  // "id": 83,
-  // "userID": "5c9b80e97a2c192a4c3419fd"
+  //get variables from form
+  const {title, author, description, price, userReview, condition }= req.body;
 
-  const {title, author, description, price,userReview, condition }= req.body;
   const idToFind = parseInt(req.params.id);
-  let updatedBook = {
-    title, 
-    author, 
-    description, 
-    price:parseInt(price), 
-    id:parseInt(req.params.id), 
-    userID: req.user.id,
-    userReview,
-    condition
-  }
 
-  let i = books.map(b => b.id).indexOf(idToFind)
+  //get new copy of the json file
+  const latestBooks = helpers.getLatestBooks();
+  
+  //1. Find the relevant book
+  //2. Make the changes
+  latestBooks
+  .then(books => {
+
+    //id of relevant book
+    let i = books.map(b => b.id).indexOf(idToFind);
+   
+    //the relevant book
+    let theBook = books.filter(b => b.id===idToFind)[0];
+    
+    //make the changes - to editable fields only
+    theBook.title = title;
+    theBook.author = author; //!!!TODO, What happens if they update author!!??
+    theBook.description = description;
+    theBook.price = price;
+    theBook.userReview = userReview;
+    theBook.condition = condition;
+
+    //splice the updated book into the json copy and resave
+    books.splice(i, 1, theBook);
+
+    const updated = JSON.stringify(books, null ,4)
+
+    fs.writeFile('./models/books.json', updated, 'utf8', err =>{
+        if(err) {
+          req.flash("error_msg", `There was a problem editing ${updated.title}` );
+          res.redirect('/dashboard')
+        }else{
+          //
+          //console.log("do we have the book? ", theBook)
+          //Syncronize the sql version (if there is one)
+          //1. is forSale true?, AND does it have a shopID?
+          //2. if so, update sql as well
+          if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
+            //need to update book in db too!!
+            console.log("book is for sale, will update sql")
+          }else{
+            //not for sale, no need for sql
+            console.log("this book is not for sale, done.")
+          }
+          req.flash("success_msg", `${updated.title} edited successfully.` );
+          res.redirect('/dashboard')
+        }
+      })
+  })
+
+ 
+  //let i = books.map(b => b.id).indexOf(idToFind)
 
   //splice the updated book and resave
-  books.splice(i, 1, updatedBook);
-  const updated = JSON.stringify(books, null ,4)
+  // books.splice(i, 1, updatedBook);
+  // const updated = JSON.stringify(books, null ,4)
   
-  fs.writeFile('./models/books.json', updated, 'utf8', err =>{
-    if(err) {
-      req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
-      res.redirect('/dashboard')
-    }else{
-      //
-      //Syncronize the sql version (if there is one)
-      //1. is forSale true?
-      //2. if so, update sql as well
-      req.flash("success_msg", `${updatedBook.title} edited successfully.` );
-      res.redirect('/dashboard')
-    }
-  })  
+  // fs.writeFile('./models/books.json', updated, 'utf8', err =>{
+  //   if(err) {
+  //     req.flash("error_msg", `There was a problem editing ${updatedBook.title}` );
+  //     res.redirect('/dashboard')
+  //   }else{
+  //     //
+  //     //Syncronize the sql version (if there is one)
+  //     //1. is forSale true?, AND does it have a shopID?
+  //     //2. if so, update sql as well
+  //     if(updated.shopID && (updated.forSale===true||updated.forSale==='true')){
+  //       //need to update book in db too!!
+  //       console.log("book is for sale, will update sql")
+  //     }else{
+  //       //not for sale, no need for sql
+  //       console.log("this book is not for sale, done.")
+  //     }
+  //     req.flash("success_msg", `${updatedBook.title} edited successfully.` );
+  //     res.redirect('/dashboard')
+  //   }
+  // })  
 })
 
 //================================================

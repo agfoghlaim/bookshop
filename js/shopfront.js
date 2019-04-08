@@ -24,6 +24,7 @@ function populateBooks(books){
     let str = `<p>You have no books for sale.</p>`;
     shopBooks.innerHTML = str;
   }else{
+    console.log("books", books)
     books.map(b=>{
       let str = `
       <div class="shop-book-item">
@@ -69,10 +70,10 @@ function deleteSqlBook(e){
   })
   .then(()=>{
     //need json id not sqlid!! 
-    let theURL = `/editJsonBook/${e.target.dataset.bookjsonid}/forSale/false`;
+    let theURL = `/editJsonBook/${e.target.dataset.bookjsonid}/${e.target.dataset.bookid}/forSale/false`;
     
     //req editJsonBook (index.js) which will set json 'forSale' field to false
-    fetch(`/editJsonBook/${e.target.dataset.bookjsonid}/forSale/false`)
+    fetch(theURL)
     .then(()=> console.log("forSale field updated"))
     .catch(error => console.log("For Sale Field Error: ", error))
   })
