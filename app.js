@@ -2,6 +2,7 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
+
 //flash messages depend on express-session
 const session = require('express-session');
 const passport = require('passport');
@@ -14,10 +15,10 @@ const app = express();
 //passport config
 require('./config/passport')(passport);
 
-//db
+//auth db
 const db = require('./config/keys').MongoURI;
 
-//connect
+//auth db connect
 mongoose.connect(db, {useNewUrlParser:true})
   .then( ()=> console.log("mongodb connected"))
   .catch( err => console.log("error: ", err))
@@ -53,7 +54,6 @@ app.use(passport.session());
 app.use(flash());
 
 //global vars (custom middleware) can be called whenever they're needed
-
 app.use((req, res, next) =>{
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');

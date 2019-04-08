@@ -147,8 +147,8 @@ router.post('/editJsonBook/:id', (req, res)=>{
 //eg /editJsonBook/49/condition/mediocre
 //changes condition of book with id 49 to 'mediocre'
 //=====================================================
-router.get('/editJsonBook/:id/:field/:thevalue', (req, res)=>{
-
+router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
+  console.log("got shopid ", req.params.shopid)
   const idToFind = parseInt(req.params.id);
   
   let bookIndex = books.map(b =>b.id).indexOf(idToFind)
@@ -157,6 +157,9 @@ router.get('/editJsonBook/:id/:field/:thevalue', (req, res)=>{
 
   //set the relevent book's relevant field to thevalue passes in params
   updatedBook[`${req.params.field}`] = req.params.thevalue;
+
+  //also set the relevant books shopid to the bookID from the sql db
+  updatedBook.shopID = parseInt(req.params.shopid);
   
   //and update the json
   books.splice(bookIndex, 1, updatedBook);

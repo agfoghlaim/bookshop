@@ -84,9 +84,11 @@ router.get('/addsqlbook/:id', (req,res)=>{
               let newBook = helpers.sellBook(bookToAdd, sqldb);
               newBook
               .then(res => {
-                console.log("book saved, will update forsale field in json")
+                console.log("book saved, will update forsale field in json,need to the the sql id here", result)
                 //to update, can i send a request to here??
                 ///editJsonBook/:id
+                //use result.insertId
+                res.redirect(`/editJsonBook/${req.params.id}/${result.insertID}/forSale/true`)
                 
               })
               .catch(err => console.log("error saving the book:", err))
@@ -102,8 +104,12 @@ router.get('/addsqlbook/:id', (req,res)=>{
         //THEN save the book 
         let newBook = helpers.sellBook(bookToAdd, sqldb);
         newBook
-        .then(res => {
-          console.log("author existed, book saved, will update forsale field in json next")      
+        .then(result => {
+          console.log("author existed, book saved, will update forsale field in json next, need id of book just saved", result.insertId);
+          
+          //now redirect where the json 'forSale' field will be set to true.
+  //in params send: jsonid, sqlid,field,value for field
+          res.redirect(`/editJsonBook/${req.params.id}/${result.insertId}/forSale/true`)
         })
         .catch(err => console.log("error saving the book:", err))
       }
@@ -113,7 +119,8 @@ router.get('/addsqlbook/:id', (req,res)=>{
     }).catch(err=>console.log("SAVING AUTHOR RELATED ERROR CAUGHT: ",err))
 
   //now redirect where the json 'forSale' field will be set to true.
-  res.redirect(`/editJsonBook/${req.params.id}/forSale/true`)
+  //in params send: jsonid, sqlid,field,value for field
+ // res.redirect(`/editJsonBook/${req.params.id}/forSale/true`)
 
   })//end of books.then, (ie get the latest json books, then do all this)
    .catch(err=>console.log("Error: ",err)) 
@@ -158,6 +165,9 @@ router.get('/sqlallusersbooks',(req,res)=>{
   })
 })
 
+router.post('/editsqlbook/:id',(req,res)=>{
+  console.log("will edit")
+})
 
 
 module.exports = router;
