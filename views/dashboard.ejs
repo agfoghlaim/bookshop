@@ -8,22 +8,30 @@
 
     <!-- all books by this user (from json) -->
     <div class="col-md-6">
-      <h2>All your books</h2>
-      <% usersBooks.forEach(function(b){ %>
-        <h5><%= b.title %><small> by 
-        <%= b.author %></small></h5>
-        <p><%= b.description %></p>
-        <p>Price: <%= b.price || 'no price listed' %></p>
-        <a href="/deleteBook/<%= b.id %>" class="btn btn-danger">Delete</a>
-        <a href="/editJsonBook/<%= b.id %>" class="btn btn-info">Edit</a>
-        <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Sell</a>
-      
-      <% }) %>
+      <div id="dashboard-json-col">
+        <h2>All your books</h2>
+        <% usersBooks.forEach(function(b){ %>
+          <h5><%= b.title %><small> by 
+          <%= b.author %></small></h5>
+          <p><%= b.description %></p>
+          <p>forSale: <%= b.forSale %></p>
+          <p>Price: <%= b.price || 'no price listed' %></p>
+          <a href="/deleteBook/<%= b.id %>" class="btn btn-danger">Delete</a>
+          <button class="btn btn-danger" 
+                  data-bookid="<%= b.id %>" 
+                  id="deleteJsonBook"
+                  data-forSale="<%= b.forSale %>"
+                  data-shopid="<%= b.shopID %>">Delete (clientside)</button>
+          <a href="/editJsonBook/<%= b.id %>" class="btn btn-info">Edit</a>
+          <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Sell</a>
         
+        <% }) %>
+      </div>  
     </div>
 
     <!-- books for sale from this user (sql) -->
     <div class="col-md-6">
+      
       <h2>Your Books for sale</h2>
       <p>add here from sql db</p>
       <button id="getallbooks">Show my Books for Sale</button>

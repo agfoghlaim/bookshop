@@ -87,11 +87,12 @@ router.get('/addsqlbook/:id', (req,res)=>{
               //THEN save the book 
               let newBook = helpers.sellBook(bookToAdd, sqldb);
               newBook
-              .then(res => {
-                console.log("book saved, will update forsale field in json,need to the the sql id here", result)
+              .then(result => {
+                console.log("book saved, will update forsale field in json,need to the the sql id here")
                 //to update, can i send a request to here??
                 ///editJsonBook/:id
                 //use result.insertId
+                console.log("do i have insert id??? ", result.insertID)
                 res.redirect(`/editJsonBook/${req.params.id}/${result.insertID}/forSale/true`)
                 
               })
@@ -135,7 +136,8 @@ router.get('/addsqlbook/:id', (req,res)=>{
 //remove sql book (make not for sale)
 
 //=============================================
-router.get('/removeqlbook/:id', (req,res)=>{
+router.get('/removesqlbook/:id', (req,res)=>{
+  console.log("deleting sql book with id ", req.params.id)
   let bookid = parseInt(req.params.id)
   let sql = `DELETE FROM books WHERE bookID = ${bookid};`;
   let query = sqldb.query(sql, (err,result)=>{
@@ -146,7 +148,9 @@ router.get('/removeqlbook/:id', (req,res)=>{
     //client side will have to call this route after it recieves this response!!
 
     //redirect to get all books (front end fetch expects array of books which will eventually be sent from /sqlaluserbooks)
-    res.redirect('/shop/sqlallusersbooks')
+
+    //res.send(result)
+   res.redirect('/shop/sqlallusersbooks')
     
   })
 })
@@ -165,12 +169,31 @@ router.get('/sqlallusersbooks',(req,res)=>{
     if(err) throw err;
 
     //just send, client will deal with it
+    console.log("SQL sending ", result)
     res.send(result)
   })
 })
 
 router.post('/editsqlbook/:id',(req,res)=>{
   console.log("will edit")
+})
+
+
+//=============================================================
+
+//get all  books from sql db (books for sale)
+
+//=============================================================
+
+router.get('/',(req,res)=>{
+
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonID,authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
+  let query = sqldb.query(sql, (err,books)=>{
+    if(err) throw err;
+
+    //just send, client will deal with it
+    res.render('shop', {books})
+  })
 })
 
 
@@ -183,6 +206,8 @@ router.post('/editsqlbook/:id',(req,res)=>{
 
 router.get('/sqleditbook/', (req,res)=>{
   //console.log(req.query.bookupdates);
+
+  //req from editjsonbook in index.js
     const {title, author, description, price, userReview, condition,shopID }= JSON.parse(req.query.bookupdates);
     
   

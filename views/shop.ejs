@@ -1,0 +1,13 @@
+<h1>The shop <small>All books(all users) from sqldb</small></h1>
+<% books.forEach(function(b){ %>
+  <h5><%= b.bookTitle %><small> by 
+  <%= b.authorName %></small></h5>
+  <h2><%= b.userName %></h2>
+  <img src="/img-<%= b.bookJsonID %>.jpg" alt="">
+ <p>json id: <%=b.bookJsonID%></p>
+  <p><%= b.bookDescription %></p>
+  <p>Price: <%= b.bookPrice || 'no price listed' %></p>
+
+  <!-- <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Buy</a> -->
+
+<% }) %>

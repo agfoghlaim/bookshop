@@ -33,6 +33,11 @@ app.use(express.static('js'));
 //css
 app.use(express.static('css'));
 
+//imgs
+app.use(express.static('img'));
+
+//imgs
+app.use(express.static('bookimages'));
 
 //bodyparser (to use req.body)
 app.use(express.urlencoded({extended: false}));

@@ -1,3 +1,14 @@
 .shop-book-item{
   background: pink;
 }
+
+.header{
+  width: 100vw;
+  height: 90vh;
+  background-image: url('/bookheader.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.header h1{
+  color: white;
+}

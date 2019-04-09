@@ -11,6 +11,8 @@
   <section class="add-product-section">
       <div class="container" style="margin-top:150px;">
           <h4>Fill out the form below or enter the isbn of your book to prepopulate form with data from Google Books </h4>
+          <p>isbns for testing</p>
+          <p>9780241184240</p>
           <label for="isbn-in">Isbn</label>
           <input type="text" id="isbn-in" value="9781782166337">
           <button id="btn">get info</button>
@@ -25,7 +27,10 @@
               </div>
     
     
-            <img src="" alt="" id="thumb">
+            <img src="" alt="" id="thumb" name="imageurl">
+
+            <!-- isbn.js will populate this with api img url -->
+            <input type="text" id="imageurl" name="imageurl" value="">
             <br><br>
             <div class="form-group">
                 <label for="title">Title:</label><br>
@@ -46,7 +51,7 @@
             </div>
 
             <div class="form-group">
-                <label for="condition">User Review:</label><br>
+                <label for="condition">Condition:</label><br>
                 <select class="form-control"  name="condition" id="condition" value="">
                     <option value="good">Good</option>
                     <option value="bad">Bad</option>
