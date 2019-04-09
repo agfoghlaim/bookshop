@@ -18,18 +18,21 @@
           <button id="btn">get info</button>
     
     
-          <form action="/addBook" method="post">
+          <form action="/addBook" 
+          method="post" 
+          accept-charset="UTF-8" 
+          enctype="multipart/form-data">
             
     
             <div class="form-group">
-                <label for="exampleFormControlFile1">Example file input</label><br>
-                <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                <label for="uploadImg">Upload Image</label><br>
+                <input type="file" class="form-control-file" name="uploadImg" id="">
               </div>
     
     
             <img src="" alt="" id="thumb" name="imageurl">
 
-            <!-- isbn.js will populate this with api img url -->
+            <!-- HIDE FIELD isbn.js will populate this with api img url -->
             <input type="text" id="imageurl" name="imageurl" value="">
             <br><br>
             <div class="form-group">

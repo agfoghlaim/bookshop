@@ -148,6 +148,8 @@ router.get('/deleteBookclient/:id', (req,res)=>{
         // }else{
         //   //if not, continue
         //   console.log("will continue")
+
+        //client now handling
           res.send(newBooks)
         //}
         
@@ -316,6 +318,8 @@ router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
 
 router.post('/addBook', (req,res) =>{
   let {title, author, description, userReview, condition, price, imageurl} = req.body;//get details from req.body
+ // let uploadimg = req.files.uploadImg;
+  //console.log("upload img ", uploadImg)
  // console.log(imageurl)
  const latestBooks = helpers.getLatestBooks();
  latestBooks.then(books =>{
