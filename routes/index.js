@@ -13,6 +13,12 @@ const http = require('http');
 //marie's helpers file
 const helpers = require('../helpers');
 
+//file uploader
+const fileUpload = require('express-fileupload');
+
+//fileUpload middleware (only need on json routes??)
+router.use(fileUpload());
+
 //====================================================
 
 //route to to save the googleapi book image
@@ -318,8 +324,8 @@ router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
 
 router.post('/addBook', (req,res) =>{
   let {title, author, description, userReview, condition, price, imageurl} = req.body;//get details from req.body
- // let uploadimg = req.files.uploadImg;
-  //console.log("upload img ", uploadImg)
+ let uploadImg = req.files.uploadImg;
+console.log("upload img ", req.files.uploadImg.name)
  // console.log(imageurl)
  const latestBooks = helpers.getLatestBooks();
  latestBooks.then(books =>{
