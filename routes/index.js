@@ -323,9 +323,11 @@ router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
 //===================================================================
 
 router.post('/addBook', (req,res) =>{
+  console.log("form submitted")
   let {title, author, description, userReview, condition, price, imageurl} = req.body;//get details from req.body
- let uploadImg = req.files.uploadImg;
-console.log("upload img ", req.files.uploadImg.name)
+ //let uploadImg = req.files.uploadImg.name;
+
+
  // console.log(imageurl)
  const latestBooks = helpers.getLatestBooks();
  latestBooks.then(books =>{
@@ -341,15 +343,36 @@ console.log("upload img ", req.files.uploadImg.name)
     id: helpers.getMaxId(books) +1, //get current max id from json file
     userID: req.user.id,//add product page protected to avoid errors here (ie when user is not logged in req.user is not defined)
   }
+  //=======================
+  //Option 1 - save uploaded image
+  //=======================
+  
 
-  //save image from api
-  //also need to save the local img url
+  if(req.files){
+    const uploadImg = req.files.uploadImg;
+    const filename = uploadImg.name;
+
+    //need to save as img-bookid(because people could have imgs with same name.) To do this split the filename and keep after the dot (eg .png)
+   const extension = filename.split('.')[1];
+   //console.log("upload img ", filename)
+    uploadImg.mv(`./bookimages/img-upload-${newBook.id}.${extension}` , function(err){
+      if(err){
+        return res.status(500).send(err);
+      }
+  
+      console.log("upload image " + req.files.uploadImg.name + " saved");
+      
+    })
+  }
+  //=======================
+  //Option 2 - save image from api
+  //=======================
   if(imageurl){
     //const niceTitle = newBook.title.replace(/[\. ,:-]+/g, "-")
     const niceTitle = `img-${newBook.id}`;
     const file = fs.createWriteStream(`./bookimages/${niceTitle}.jpg`);
       const request = http.get(imageurl, function(response) {
-        console.log("saving image ")
+        console.log("saving google image ")
         response.pipe(file);
       });
   }

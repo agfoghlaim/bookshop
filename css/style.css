@@ -12,3 +12,23 @@
 .header h1{
   color: white;
 }
+
+.hide{
+  /* visibility: hidden; */
+  display: none;
+}
+
+.show{
+  /* visibility: visible ; */
+  display: grid;
+}
+
+.step{
+  background: pink;
+  border: 2px solid gray;
+  border-radius: 10px;
+  padding: 10%;
+  /* display: grid; */
+  justify-content: center;
+  /* position: absolute; */
+}
