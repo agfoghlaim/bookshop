@@ -1,140 +1,152 @@
-<div class="container" style="margin-top:150px;">
+<div class="container" >
     <% include ./partials/messages %>
 </div>
 
   
 
   <section class="add-product-section">
-      <div class="container" style="margin-top:150px;">
-          <h4>Fill out the form below or enter the isbn of your book to prepopulate form with data from Google Books </h4>
-          <p>isbns for testing</p>
-          <p>9780241184240</p>
+    <div class="container">
+        <!-- <h4>Fill out the form below or enter the isbn of your book to prepopulate form with data from Google Books </h4>
+        <p>isbns for testing</p>
+        <p>9780241184240</p> -->
         
-        <div class="step step-0 col-12-md" id="step-0">
-            <h3>Step 0</h3>
-            <h4>Use ISBN Helper...</h4>
-          <label for="isbn-in">Enter ISBN <small>(or leave blank to skip)</small></label>
-          <input type="text" id="isbn-in" value="9781782166337">
-          <button type="button" id="btn">Go</button>
-
-          <i class="fas fa-long-arrow-alt-right fa-xl">Skip</i>
-        </div>
-
-          <form action="/addBook" 
-          method="post" 
-          accept-charset="UTF-8" 
-          encType="multipart/form-data">
-
-             <!-- will show the api image -->
-             <div class="step step-1 col hide" id="step-1">
-                <h3>Step 1</h3>
-                <h4>Image stuff...</h4>
-                <img src="" alt="" id="thumb" name="imageurl">
-
-                <!-- decide which image to use -->
-                <div class="form-group img-radios">
-                        <input type="radio"
-                                class="img-radio" 
-                                id="defaultImgConfirm" 
-                                name="ImgConfirm" 
-                                value="defaultImgConfirm"
-                                checked>
-                        <label for="defaultImgConfirm">Use this Image</label>
-                        <input type="radio"
-                                class="img-radio" 
-                                id="ownImgConfirm" 
-                                name="ImgConfirm" 
-                                value="ownImgConfirm">
-                        <label for="ownImgConfirm">Upload Your Own</label>
-                </div>
+        <div class="step-container">   
+                <div class="progress" id="progress"></div> 
+            <div class="step step-0 col" id="step-0">
+                    <!-- <div class="progress progress-0"></div>  -->
+                <h3 >Step 0</h3>
+                <h5>Use ISBN Helper...</h5>
+            <p><label for="isbn-in">Enter ISBN <small>(or leave blank to skip)</small></label></p>
+            <input type="text" id="isbn-in" value="9781782166337">
             
-                <!-- HIDE FIELD isbn.js will populate this with api img url so it can submitted with form -->
-                <input type="text" id="imageurl" name="imageurl" value="" class="hide">
-
-                <!-- hidden by default, will show if user selects upload image -->
-                <div class="form-group hide" id="img-uploader">
-                        <label for="uploadImg">Upload Image</label><br>
-                        <input type="file" class="form-control-file" name="uploadImg" id="">
-                </div>
-                <button type="button" class="btn btn-prev" data-backto="0" id="">Back</button>
-                <button type="button" class="btn btn-next" data-forwardto="2" id="">Next</button>
-            </div>
-            <!-- end step 1 img -->
-    
+            <p><button type="button" class="prevNextBtn" id="btn"><i class="fas fa-long-arrow-alt-right fa-3x"></i></button></p>
             
-      
-
-            <!-- step 2 -->
-            <div class="step step-2 col hide" id="step-2">
-                    <h3>Step 2</h3>
-                    <h4>Author and Title...</h4>
-                <div class="form-group">
-                    <label for="title">Title:</label><br>
-                    <input type="text" id="title" name="title" value="">
-                </div>
-                <div class="form-group">
-                    <label for="author">Author:</label><br>
-                    <input type="text" name="author" id="author" value="">
-                </div>
-
-                <button class="btn btn-prev" data-backto="1" id="">Back</button>
-                <button class="btn btn-next" data-forwardto="3" id="">Next</button>
             </div>
-            <!-- end step 2 -->
 
-            <!-- step 3 -->
-            <div class="step step-3 col hide" id="step-3">
-                <h3>Step 3</h3>
-                <h4>Description...</h4>
-                <div class="form-group">
-                    <label for="description">Description:</label><br>
-                    <textarea class="form-control" rows="15" type="textarea" name="description" id="description" value=""></textarea>
+            <form action="/addBook" 
+            method="post" 
+            accept-charset="UTF-8" 
+            encType="multipart/form-data">
+
+                <!-- will show the api image -->
+                <div class="step step-1 col hide" id="step-1">
+                        <!-- <div class="progress  progress-1"></div>  -->
+                    <h3>Step 1</h3>
+                    <h5>Image stuff...</h5>
+                    <img src="" alt="" id="thumb" name="imageurl">
+
+                    <!-- decide which image to use, will default to default-img.png if none selected -->
+                    <div class="form-group img-radios">
+                            <input type="radio"
+                                    class="img-radio" 
+                                    id="defaultImgConfirm" 
+                                    name="ImgConfirm" 
+                                    value="defaultImgConfirm"
+                                    checked>
+                            <label for="defaultImgConfirm">Use default Image</label>
+                            <input type="radio"
+                                    class="img-radio" 
+                                    id="ownImgConfirm" 
+                                    name="ImgConfirm" 
+                                    value="ownImgConfirm">
+                            <label for="ownImgConfirm">Upload Your Own</label>
+                    </div>
+                
+                    <!-- HIDE FIELD isbn.js will populate this with api img url so it can submitted with form -->
+                    <input type="text" id="imageurl" name="imageurl" value="" class="hide">
+
+                    <!-- hidden by default, will show if user selects upload image -->
+                    <div class="form-group hide" id="img-uploader">
+                            <label for="uploadImg">Upload Image</label><br>
+                            <input type="file" class="form-control-file" name="uploadImg" id="">
+                    </div>
+                    <button type="button" class="prevNextBtn btn btn-prev" data-backto="0" id="">
+                        <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+                    </button>
+                    <button type="button" class="prevNextBtn btn btn-next" data-forwardto="2" id="">
+                        <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                    </button>
                 </div>
-                <button class="btn btn-prev" data-backto="2" id="">Back</button>
-                <button class="btn btn-next" data-forwardto="4" id="">Next</button>
-            </div>
-            <!-- end step 3 -->
+                <!-- end step 1 img -->
+        
+                
+        
 
+                <!-- step 2 -->
+                <div class="step step-2 col hide" id="step-2">
+                        <h3>Step 2</h3>
+                        <h5>Author and Title...</h5>
+                    <div class="form-group">
+                        <label for="title">Title:</label><br>
+                        <input type="text" id="title" name="title" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author:</label><br>
+                        <input type="text" name="author" id="author" value="" required>
+                    </div>
 
-            <!-- step 4 -->
-            <div class="step step-4 col hide" id="step-4">
-            <h3>Step 4</h3>
-                <h4>Your Review...</h4>
-                <div class="form-group">
-                    <label for="userReview">User Review:</label><br>
-                    <textarea class="form-control" rows="15" type="textarea" name="userReview" id="userReview" value=""></textarea>
+                    <button class="btn btn-prev prevNextBtn " data-backto="1" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
+                    <button class="btn btn-next prevNextBtn" data-forwardto="3" id=""><i class="fas fa-long-arrow-alt-right fa-3x"></i></button>
                 </div>
-                <button class="btn btn-prev" data-backto="3" id="">Back</button>
-                <button class="btn btn-next" data-forwardto="5" id="">Next</button>
-            </div>
-            <!-- end step 4 -->
+                <!-- end step 2 -->
 
-            <!-- step 5 -->
-            <div class="step step-5 col hide" id="step-5">
-                <h3>Step 5</h3>
-                <h4>And Finally...</h4>
-
-                <div class="form-group">
-                    <label for="condition">Condition:</label><br>
-                    <select class="form-control"  name="condition" id="condition" value="">
-                        <option value="good">Good</option>
-                        <option value="bad">Bad</option>
-                    </select>
+                <!-- step 3 -->
+                <div class="step step-3 col hide" id="step-3">
+                    <h3>Step 3</h3>
+                    <h4>Description...</h4>
+                    <div class="form-group">
+                        <label for="description">Description:</label><br>
+                        <textarea class="form-control" rows="10" type="textarea" cols="100" name="description" id="description" value="" required></textarea>
+                    </div>
+                    <button class="btn btn-prev prevNextBtn" data-backto="2" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
+                    <button class="btn btn-next prevNextBtn" data-forwardto="4" id=""><i class="fas fa-long-arrow-alt-right fa-3x"></i></button>
                 </div>
+                <!-- end step 3 -->
 
 
-                <div class="form-group">
-                    <label for="price">Price:</label><br>
-                    <input class="form-control" rows="15" type="text" name="price" id="price" value="">
+                <!-- step 4 -->
+                <div class="step step-4 col hide" id="step-4">
+                <h3>Step 4</h3>
+                    <h3>Your Review...</h5>
+                    <div class="form-group">
+                        <label for="userReview">User Review:</label><br>
+                        <textarea class="form-control" rows="10" type="textarea" cols="100" name="userReview" id="userReview" value=""></textarea>
+                    </div>
+                    <button class="btn btn-prev prevNextBtn" data-backto="3" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
+                    <button class="btn btn-next prevNextBtn" data-forwardto="5" id=""><i class="fas fa-long-arrow-alt-right fa-3x"></i></button>
                 </div>
-                <button class="btn btn-prev" data-backto="4" id="">Back</button>
+                <!-- end step 4 -->
 
-                <!-- the submit form btn -->
-                <input type="submit" value="Save">
-            </div>
-    
-          </form> 
-        </div>
+                <!-- step 5 -->
+                <div class="step step-5 col hide" id="step-5">
+                    <h3>Step 5</h3>
+                    <h5>And Finally...</h5>
+
+                    <div class="form-group">
+                        <label for="condition">Condition:</label><br>
+                        <select class="form-control"  name="condition" id="condition" value="">
+                            <option value="good">Good</option>
+                            <option value="bad">Bad</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="price">Price:</label><br>
+                        <input class="form-control" rows="15" type="text" name="price" id="price" value="" required>
+                    </div>
+                    <button class="btn btn-prev prevNextBtn" data-backto="4" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
+
+                    <!-- the submit form btn -->
+                    <input type="submit" value="Save">
+                </div>
+        
+            </form> 
+           
+            </div> <!-- end step container  -->
+            
+        
+        </div><!-- end ontainer  -->
   </section>
   
  

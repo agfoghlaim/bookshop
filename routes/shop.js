@@ -66,8 +66,8 @@ router.get('/addsqlbook/:id', (req,res)=>{
       bookPrice: theBook[0].price,
       authorID: '',
       userReview: theBook[0].userReview,
-      userBookImage: '',
-      bookJsonID: theBook[0].id
+      bookJsonID: theBook[0].id,
+      userBookImage: theBook[0].imageurl
     }
 
     //check if author is already saved in db?
@@ -164,7 +164,7 @@ router.get('/removesqlbook/:id', (req,res)=>{
 
 router.get('/sqlallusersbooks',(req,res)=>{
 
-  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId,authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = "${req.user.id}"`;
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = "${req.user.id}"`;
   let query = sqldb.query(sql, (err,result)=>{
     if(err) throw err;
 
@@ -187,7 +187,7 @@ router.post('/editsqlbook/:id',(req,res)=>{
 
 router.get('/',(req,res)=>{
 
-  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonID,authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonID, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
   let query = sqldb.query(sql, (err,books)=>{
     if(err) throw err;
 

@@ -3,7 +3,12 @@
   <h5><%= b.bookTitle %><small> by 
   <%= b.authorName %></small></h5>
   <h2><%= b.userName %></h2>
-  <img src="/img-<%= b.bookJsonID %>.jpg" alt="">
+ 
+  <!-- <img src="/img-<%= b.bookJsonID %>.jpg" alt=""> -->
+  <p>Image from sql db:<%= b.userBookImage%><img src="/<%= b.userBookImage%>" alt=""></p>
+  
+  <!-- <img src="/default-img.PNG" alt=""> -->
+ 
  <p>json id: <%=b.bookJsonID%></p>
   <p><%= b.bookDescription %></p>
   <p>Price: <%= b.bookPrice || 'no price listed' %></p>

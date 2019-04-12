@@ -24,7 +24,7 @@ function showNext(hidestep, showstep){
   console.log("will show next step")
   const hideStep = document.querySelector(`#${hidestep}`)
   const showStep = document.querySelector(`#${showstep}`)
-  //console.log(showStep)
+  console.log(showStep)
   if(!hideStep.classList.contains('hide')){
     hideStep.classList.add('hide')
   }
@@ -34,6 +34,16 @@ function showNext(hidestep, showstep){
  
   showStep.classList.remove('hide')
   showStep.classList.add('show')
+  doProgress(1)
+
+  //try animation
+ 
+  // hideStep.addEventListener('transitionend',function(){
+  //   if(!hideStep.classList.contains('hide')){
+  //     hideStep.classList.add('hide')
+  //   }
+  // })
+  // hideStep.classList.add('fancy-hide');
  
 }
 
@@ -49,8 +59,18 @@ prevBtns.forEach(b => b.addEventListener('click', function(e){goToPrev(e)}))
 
 function goToPrev(e){
   e.preventDefault();
-  const prevStep = `step-${e.target.dataset.backto}`;
-  const currentStep = `step-${parseInt(e.target.dataset.backto)+1}`
+  console.log("e.target", e.target);
+  let backTo = e.target.dataset.backto;
+
+  if(e.target.classList.contains('fas')){
+    if(e.target.parentNode.dataset.backto){
+      backTo = e.target.parentNode.dataset.backto
+    }else{
+      return;
+    }
+  }
+  const prevStep = `step-${backTo}`;
+  const currentStep = `step-${parseInt(backTo)+1}`
   console.log(currentStep)
   //hide current step
   document.querySelector(`.${currentStep}`).classList.remove('show')
@@ -60,6 +80,7 @@ function goToPrev(e){
   document.querySelector(`.${prevStep}`).classList.remove('hide')
   document.querySelector(`.${prevStep}`).classList.add('show')
   console.log(prevStep);
+  doProgress(backTo)
 }
 
 //=============================
@@ -74,17 +95,43 @@ nextBtns.forEach(b => b.addEventListener('click', function(e){goToNext(e)}))
 
 function goToNext(e){
   e.preventDefault();
-  const nextStep = `step-${e.target.dataset.forwardto}`;
-  const currentStep = `step-${parseInt(e.target.dataset.forwardto)-1}`
-  console.log(currentStep)
+  console.log("e.target", e.target);
+  let forwardTo = e.target.dataset.forwardto;
+
+  //there is a problem where the fontawesome arrow is big so interfering with the clickable area on the button. If target is a fontawesom icon ('.fas), check if it's parentNode is a next button....
+  if(e.target.classList.contains('fas')){
+    if(e.target.parentNode.dataset.forwardto){
+      forwardTo = e.target.parentNode.dataset.forwardto
+    }else{
+      return;
+    }
+  }
+  
+  const nextStep = `step-${forwardTo}`;
+  const currentStep = `step-${parseInt(forwardTo)-1}`
+ 
   //hide current step
   document.querySelector(`.${currentStep}`).classList.remove('show')
   document.querySelector(`.${currentStep}`).classList.add('hide')
-  console.log(nextStep);
+  
   //show next step
   document.querySelector(`.${nextStep}`).classList.remove('hide')
   document.querySelector(`.${nextStep}`).classList.add('show')
+  
+  doProgress(forwardTo)
+}
+
+//====================================
+
+//Progress bar 
+
+//=====================================
+function doProgress(step){
  
+  const progress = document.getElementById('progress');
+  const width = (step * 10)*2; 
+  console.log("doing progress", width)
+  progress.setAttribute('style', `width:${width}%;`);
 }
 
 

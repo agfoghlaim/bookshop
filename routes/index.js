@@ -347,7 +347,7 @@ router.post('/addBook', (req,res) =>{
   //Option 1 - save uploaded image
   //=======================
   
-
+  //if an image was uploaded
   if(req.files){
     const uploadImg = req.files.uploadImg;
     const filename = uploadImg.name;
@@ -355,7 +355,7 @@ router.post('/addBook', (req,res) =>{
     //need to save as img-bookid(because people could have imgs with same name.) To do this split the filename and keep after the dot (eg .png)
    const extension = filename.split('.')[1];
    //console.log("upload img ", filename)
-    uploadImg.mv(`./bookimages/img-upload-${newBook.id}.${extension}` , function(err){
+    uploadImg.mv(`./bookimages/img-${newBook.id}.${extension}` , function(err){
       if(err){
         return res.status(500).send(err);
       }
@@ -363,11 +363,14 @@ router.post('/addBook', (req,res) =>{
       console.log("upload image " + req.files.uploadImg.name + " saved");
       
     })
-  }
+  //else if they choose the google image
+  }else if(imageurl){
+
+ 
   //=======================
   //Option 2 - save image from api
   //=======================
-  if(imageurl){
+ // if(imageurl){
     //const niceTitle = newBook.title.replace(/[\. ,:-]+/g, "-")
     const niceTitle = `img-${newBook.id}`;
     const file = fs.createWriteStream(`./bookimages/${niceTitle}.jpg`);
@@ -375,6 +378,9 @@ router.post('/addBook', (req,res) =>{
         console.log("saving google image ")
         response.pipe(file);
       });
+  //else use the default image
+  }else{
+    newBook.imageurl = 'default-img.png';
   }
 
   //get the latest json data

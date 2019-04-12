@@ -1,3 +1,8 @@
+/* header */
+#logo{
+  width:20vw;
+
+}
 .shop-book-item{
   background: pink;
 }
@@ -5,30 +10,116 @@
 .header{
   width: 100vw;
   height: 90vh;
-  background-image: url('/bookheader.jpg');
+ background-image: linear-gradient(#edf2efbd, #282626e3),url(/bookheader.jpg);
   background-size: cover;
   background-position: center;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 .header h1{
   color: white;
 }
 
-.hide{
-  /* visibility: hidden; */
-  display: none;
-}
 
-.show{
-  /* visibility: visible ; */
-  display: grid;
-}
 
 .step{
-  background: pink;
-  border: 2px solid gray;
-  border-radius: 10px;
-  padding: 10%;
-  /* display: grid; */
+  display:grid;
+  transition: all 0.6s ease-in-out;
+  position: absolute;
+  top:5vh;
+  left:0;
+  align-content: center;
+  height: 90vh;
+  background: linear-gradient(#1ba455,#1ba45594);
+  /* border: 2px solid gray; */
+  /* border-radius: 10px; */
   justify-content: center;
-  /* position: absolute; */
+  justify-items: center;
+ 
 }
+
+.hide{
+
+ 
+ /* transform: translateX(-4000px); */
+ transform:translateY(2px);
+ transition: all 0.2s ease-out;
+ visibility:hidden;
+  /* visibility: hidden;
+  opacity:0; */
+  /* height: 0vh; */
+  /* transition: opacity 3s linear; */
+
+}
+.show{
+  visibility: visible;
+  transform: translateY(0px);
+  transition: all 0.4s ease-in;
+
+  /* visibility: visible;
+  opacity:1; */
+  /* height: 100%; */
+  /* display: grid;  */
+ /* height: 70vh;
+  transition: all 3s linear;  */
+}
+
+.progress{
+  height: 5vh;
+  background: #00000045;
+  transition: width 0.5s linear 0.4s;
+  position: absolute;
+  top: 5vh;
+  left:0;
+  width: 0%;
+  z-index: 1;
+}
+
+.progress:hover{
+  width:50%;
+  
+}
+.progress{
+  /* width:30%; */
+  /* animation: progress-animate 2s linear 1s forwards;  */
+}
+@keyframes progress-animate{
+  0%{width: 10%;}
+  100%{width: 30%;}
+}
+
+/* .fancy-hide{
+  opacity: 0;
+  transition: all 3s linear;
+}
+
+.fancy-show{
+  opacity: 1;
+  transition: all 3s linear;
+} */
+
+/* ===================================
+
+add book page
+
+=========================================*/
+.step-container{
+ 
+  position: relative;
+  height: 95vh;
+  
+}
+.step-container h3,.step-container h5,.step-container p,.step-container label{
+  color: white;
+}
+
+/* previous and next buttons  */
+.prevNextBtn{
+  background: none;
+  border:none;
+  outline:none;
+  color: white;
+}
+
+
