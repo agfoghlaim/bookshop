@@ -2,6 +2,10 @@
     <% include ./partials/messages %>
 </div>
 
+<div class="page-heading">
+        <h1 class="text-center"><small>You are...</small><br><br><span class="book-cursive ">Adding a book.</span> </h1>
+</div>
+
   
 
   <section class="add-product-section">
@@ -14,12 +18,12 @@
                 <div class="progress" id="progress"></div> 
             <div class="step step-0 col" id="step-0">
                     <!-- <div class="progress progress-0"></div>  -->
-                <h3 >Step 0</h3>
-                <h5>Use ISBN Helper...</h5>
+             
+                <h3 class="book-cursive">isbn Helper</h3>
             <p><label for="isbn-in">Enter ISBN <small>(or leave blank to skip)</small></label></p>
             <input type="text" id="isbn-in" value="9781782166337">
             
-            <p><button type="button" class="prevNextBtn" id="btn"><i class="fas fa-long-arrow-alt-right fa-3x"></i></button></p>
+            <p class="text-center"><button type="button" class="prevNextBtn" id="btn"><i class="fas fa-long-arrow-alt-right fa-3x"></i></button></p>
             
             </div>
 
@@ -31,9 +35,8 @@
                 <!-- will show the api image -->
                 <div class="step step-1 col hide" id="step-1">
                         <!-- <div class="progress  progress-1"></div>  -->
-                    <h3>Step 1</h3>
-                    <h5>Image stuff...</h5>
-                    <img src="" alt="" id="thumb" name="imageurl">
+                    <h3 class="book-cursive" >Image</h3>
+                    
 
                     <!-- decide which image to use, will default to default-img.png if none selected -->
                     <div class="form-group img-radios">
@@ -56,16 +59,22 @@
                     <input type="text" id="imageurl" name="imageurl" value="" class="hide">
 
                     <!-- hidden by default, will show if user selects upload image -->
-                    <div class="form-group hide" id="img-uploader">
-                            <label for="uploadImg">Upload Image</label><br>
-                            <input type="file" class="form-control-file" name="uploadImg" id="">
+                    <div class="add-image-section">
+                        <img src="" class="thumbnail-size-img" alt="" id="thumb" name="imageurl">
+                        <div class="form-group hide" id="img-uploader">
+                                <label for="uploadImg">Upload Image</label><br>
+                                <input type="file" class="form-control-file" name="uploadImg" id="">
+                        </div>
                     </div>
+
+                    <p class="text-center">
                     <button type="button" class="prevNextBtn btn btn-prev" data-backto="0" id="">
                         <i class="fas fa-long-arrow-alt-left fa-3x"></i>
                     </button>
                     <button type="button" class="prevNextBtn btn btn-next" data-forwardto="2" id="">
                         <i class="fas fa-long-arrow-alt-right fa-3x"></i>
                     </button>
+                </p>
                 </div>
                 <!-- end step 1 img -->
         
@@ -74,59 +83,67 @@
 
                 <!-- step 2 -->
                 <div class="step step-2 col hide" id="step-2">
-                        <h3>Step 2</h3>
-                        <h5>Author and Title...</h5>
+                        
+                        <h3 class="book-cursive">Title & Author</h3>
                     <div class="form-group">
-                        <label for="title">Title:</label><br>
+                        <label for="title">Title</label><br>
                         <input type="text" id="title" name="title" value="" required>
                     </div>
                     <div class="form-group">
-                        <label for="author">Author:</label><br>
+                        <label for="author">Author</label><br>
                         <input type="text" name="author" id="author" value="" required>
                     </div>
 
+                    <p class="text-center">
                     <button class="btn btn-prev prevNextBtn " data-backto="1" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
                     <button class="btn btn-next prevNextBtn" data-forwardto="3" id=""><i class="fas fa-long-arrow-alt-right fa-3x"></i></button>
+                </p>
                 </div>
                 <!-- end step 2 -->
 
                 <!-- step 3 -->
                 <div class="step step-3 col hide" id="step-3">
-                    <h3>Step 3</h3>
-                    <h4>Description...</h4>
+                    
+                    <h3 class="book-cursive">Description</h3>
                     <div class="form-group">
-                        <label for="description">Description:</label><br>
+                      
                         <textarea class="form-control" rows="10" type="textarea" cols="100" name="description" id="description" value="" required></textarea>
                     </div>
+
+                    <p class="text-center">
                     <button class="btn btn-prev prevNextBtn" data-backto="2" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
                     <button class="btn btn-next prevNextBtn" data-forwardto="4" id=""><i class="fas fa-long-arrow-alt-right fa-3x"></i></button>
+                    </p>
                 </div>
                 <!-- end step 3 -->
 
 
                 <!-- step 4 -->
                 <div class="step step-4 col hide" id="step-4">
-                <h3>Step 4</h3>
-                    <h3>Your Review...</h5>
+               
+                    <h3 class="book-cursive" >Review</h3>
                     <div class="form-group">
-                        <label for="userReview">User Review:</label><br>
+                        <label for="userReview"></label><br>
                         <textarea class="form-control" rows="10" type="textarea" cols="100" name="userReview" id="userReview" value=""></textarea>
                     </div>
+
+                    <p class="text-center">
                     <button class="btn btn-prev prevNextBtn" data-backto="3" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
                     <button class="btn btn-next prevNextBtn" data-forwardto="5" id=""><i class="fas fa-long-arrow-alt-right fa-3x"></i></button>
+                </p>
                 </div>
                 <!-- end step 4 -->
 
                 <!-- step 5 -->
                 <div class="step step-5 col hide" id="step-5">
-                    <h3>Step 5</h3>
-                    <h5>And Finally...</h5>
+                    <h3 class="book-cursive">And Finally...</h3>
 
                     <div class="form-group">
                         <label for="condition">Condition:</label><br>
                         <select class="form-control"  name="condition" id="condition" value="">
                             <option value="good">Good</option>
                             <option value="bad">Bad</option>
+                            
                         </select>
                     </div>
 
@@ -135,10 +152,13 @@
                         <label for="price">Price:</label><br>
                         <input class="form-control" rows="15" type="text" name="price" id="price" value="" required>
                     </div>
+
+                    <p class="text-center">
                     <button class="btn btn-prev prevNextBtn" data-backto="4" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
 
                     <!-- the submit form btn -->
                     <input type="submit" value="Save">
+                </p>
                 </div>
         
             </form> 

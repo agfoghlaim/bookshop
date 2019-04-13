@@ -16,7 +16,11 @@ function getInfo(){
 
   })
   .then(()=> {showNext('step-0', 'step-1');})
-  .catch(error => {console.log("error ", error);showNext('step-0', 'step-1')})
+  .catch(error => {
+    console.log("error ", error);
+    document.getElementById('thumb').src = `./default-img.png`;
+    showNext('step-0', 'step-1')
+  })
 }
 
 function showNext(hidestep, showstep){
@@ -144,14 +148,20 @@ function doProgress(step){
 function populateForm(book){
   document.getElementById('title').value = book.volumeInfo.title;
   document.getElementById('author').value = book.volumeInfo.authors[0];
-  document.getElementById('thumb').src = book.volumeInfo.imageLinks.smallThumbnail;
+
+    document.getElementById('thumb').src = book.volumeInfo.imageLinks.smallThumbnail;
+ 
+ 
   document.getElementById('description').value = book.volumeInfo.description;
   document.getElementById('imageurl').value = book.volumeInfo.imageLinks.smallThumbnail;
 }
+//======================================
 
+// Add Book Form
 //listen to radio button ownImgConfirm, if user wants to upload their own image:
 //1. show the upload image form field group
 //2. Hide the default Image if it exists
+
 const ownImgConfirm = document.getElementById('ownImgConfirm');
 const radios = document.querySelector('.img-radios');
 if(radios){
@@ -177,5 +187,35 @@ if(radios){
   
   })
 }
+
+//=============================
+
+//Edit Book Form
+const newImgConfirm = document.getElementById('newImgConfirm');
+const editRadios = document.querySelector('.edit-img-radios');
+if(editRadios){
+  editRadios.addEventListener('change', function(e){
+    const uploader = document.getElementById('edit-img-uploader');
+    const thumb = document.getElementById('edit-thumb');
+
+    if(!e.target.classList.contains('edit-img-radio')){
+      return;
+    }
+    if(e.target.value === 'newImgConfirm'){
+      console.log("will show thing", e.target.value);
+      
+      uploader.classList.remove('hide-1')
+      thumb.classList.add('hide-1')
+      //hide default img
+      //show upload file fields
+    }else if(e.target.value = 'keepImgConfirm'){
+      console.log("will hide upload", e.target.value)
+      uploader.classList.add('hide-1')
+      thumb.classList.remove('hide-1')
+    }
+  
+  })
+}
+
 
 

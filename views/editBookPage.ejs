@@ -2,12 +2,16 @@
   <% include ./partials/messages %>
 </div>
 
+<div class="page-heading">
+  <h1 class="text-center"><small>You Are Editing... </small><br><br><span class="book-cursive ">"<%=theBook[0].title %>"</span> </h1>
+</div>
+
 <section class="edit-product-section">
     <div class="container">
-        <h4>Fill out the form below or enter the isbn of your book to prepopulate form with data from Google Books </h4>
+        <!-- <h4>Fill out the form below or enter the isbn of your book to prepopulate form with data from Google Books </h4>
         <label for="isbn-in">Isbn</label>
         <input type="text" id="isbn-in" value="9781782166337">
-        <button id="btn">get info</button>
+        <button id="btn">get info</button> -->
       
         <% theBook.forEach(function(b){ %>
   
@@ -15,54 +19,152 @@
           method="post"
           accept-charset="UTF-8" 
           encType="multipart/form-data">
-          <!-- <div class="form-group">
-              <label for="exampleFormControlFile1">Example file input</label><br>
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
-            </div> -->
   
-  
-          <img src="" alt="" id="thumb">
-          <br><br>
-          <div class="form-group">
-              <label for="comment">Title:</label><br>
-              <input type="text" id="title" name="title" value="<%= b.title %>">
-          </div>
-          <div class="form-group">
-              <label for="comment">Author:</label><br>
-              <input type="text" name="author" id="author" value="<%= b.author %>">
-          </div>
-          <div class="form-group">
-              <label for="comment">Description:</label><br>
-              <textarea class="form-control" rows="15" type="textarea" name="description" id="description" value="<%= b.description %>"><%= b.description %></textarea>
-          </div>
+           
+          <div class="step-container">   
+            <div class="progress" id="progress"></div> 
+            
+            <!-- step 0 -->
+            <div class="step step-0 col" id="step-0">
+              <!-- <img src="" alt="" id="thumb"> -->
+              
+              <div class="form-group">
+                  <label for="comment"><h3 class="book-cursive">Title</h3></label><br>
+                  <input type="text" id="title" name="title" value="<%= b.title %>">
+              </div><br>
+              <div class="form-group">
+                  <label for="comment"><h3 class="book-cursive">Author</h3></label><br>
+                  <input type="text" name="author" id="author" value="<%= b.author %>">
+              </div>
+              <button type="button" class="prevNextBtn btn btn-next" data-forwardto="1" id="">
+                <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+              </button>
+            </div>
 
+            <!-- step 1 -->
+            <div class="step step-1 col hide" id="step-1">
+               <!-- decide which image to use, will default to default-img.png if none selected -->
+               <h3 class="book-cursive">Image</h3>
+               <div class="form-group edit-img-radios">
+                  <input type="radio"
+                          class="edit-img-radio" 
+                          id="keepImgConfirm" 
+                          name="editImgConfirm" 
+                          value="keepImgConfirm"
+                          checked>
+                  <label for="keepImgConfirm">Keep image</label>
+                  <input type="radio"
+                          class="edit-img-radio" 
+                          id="newImgConfirm" 
+                          name="editImgConfirm" 
+                          value="newImgConfirm">
+                  <label for="newImgConfirm">Upload New</label>
+              </div>
 
-          <div class="form-group">
-              <label for="price">Price:</label><br>
-              <input class="form-control" rows="15" type="text" name="price" id="price" value="<%= b.price %>">
-          </div>
+              <div class="form-group ">
+                  
+                <div class="edit-image-section">
+                    <img src="/<%= b.imageurl %>" id="edit-thumb" class="thumbnail-size-img" alt="">
+                    <div class="form-group hide-1" id="edit-img-uploader">
+                        <label for="uploadImg"></label><br>
+                        <input type="file" class="form-control-file" name="uploadImg" id="">  
+                    </div>
+                </div>
+                
+                <p class="text-center">
+                <button type="button" class="prevNextBtn btn btn-prev" data-backto="0" id="">
+                    <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+                </button>
+                <button type="button" class="prevNextBtn btn btn-next" data-forwardto="2" id="">
+                    <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                </button>
+                </p>
 
-          
+              </div>
+            </div>       
+               
+
+    
+
+              <!-- step 2 -->
+              <div class="step step-2 col hide" id="step-2">
+                <div class="form-group">
+                    <label for="price"><h3 class="book-cursive">Price</h3></label><br>
+                    <input class="form-control" rows="15" type="text" name="price" id="price" value="<%= b.price %>">
+                </div>
+
+                <p class="text-center">
+                  <button type="button" class="prevNextBtn btn btn-prev" data-backto="1" id="">
+                    <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+                  </button>
+                  <button type="button" class="prevNextBtn btn btn-next" data-forwardto="3" id="">
+                    <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                  </button>
+                </p>
+
+              </div>
+
+              
+              <!-- step 3 -->
+              <div class="step step-3 col hide" id="step-3">
+                  <div class="form-group">
+                    <label for="comment"><h3 class="book-cursive">Description</h3></label><br>
+                    <textarea class="form-control" rows="10" cols="100" type="textarea" name="description" id="description" value="<%= b.description %>"><%= b.description %></textarea>
+                  </div>
+
+                <p class="text-center">
+                  <button type="button" class="prevNextBtn btn btn-prev" data-backto="2" id="">
+                      <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+                  </button>
+                  <button type="button" class="prevNextBtn btn btn-next" data-forwardto="4" id="">
+                      <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                  </button>
+                </p>
+              </div>
+
+              <!-- step 4 -->
+              <div class="step step-4 col hide" id="step-4">
+                <div class="form-group">
+                  <label for="userReview"><h3 class="book-cursive">Review</h3></label><br>
+                  <textarea class="form-control" rows="10" cols="100" type="textarea" name="userReview" id="userReview" value="<%= b.userReview %>"><%= b.userReview %></textarea>
+                </div>
+
+                <p class="text-center">
+                  <button type="button" class="prevNextBtn btn btn-prev" data-backto="3" id="">
+                      <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+                  </button>
+                  <button type="button" class="prevNextBtn btn btn-next" data-forwardto="5" id="">
+                      <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                  </button>
+              </p>
+
+                
+              </div>
+
+              <!-- step 5 -->
+              <div class="step step-5 col hide" id="step-5">
+
+                <div class="form-group">
+                    <label for="condition"><h3 class="book-cursive">Condition</h3></label><br>
+                    <select class="form-control"  name="condition" id="condition" value="<%= b.condition %>">
+                        <option value="good">Good</option>
+                        <option value="bad">Bad</option>
+                    </select>
+                </div>
+
+                
+
+              <p class="text-center">
+              <button type="button" class="prevNextBtn btn btn-prev" data-backto="4" id="">
+                <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+            </button>
          
-          <div class="form-group" id="img-uploader">
-                  <label for="uploadImg">Upload Image</label><br>
-                  <input type="file" class="form-control-file" name="uploadImg" id="">
+            
+              <input class="btn btn-secondary" type="submit" value="Save">
+            </p>
+            </div>
+            </div>
           </div>
-
-          <div class="form-group">
-            <label for="userReview">User Review:</label><br>
-            <textarea class="form-control" rows="15" type="textarea" name="userReview" id="userReview" value="<%= b.userReview %>"><%= b.userReview %></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="condition">Condition:</label><br>
-            <select class="form-control"  name="condition" id="condition" value="<%= b.condition %>">
-                <option value="good">Good</option>
-                <option value="bad">Bad</option>
-            </select>
-        </div>
-        
-          <input type="submit" value="Save">
   
         </form> 
 
