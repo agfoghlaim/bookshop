@@ -154,26 +154,28 @@ function populateForm(book){
 //2. Hide the default Image if it exists
 const ownImgConfirm = document.getElementById('ownImgConfirm');
 const radios = document.querySelector('.img-radios');
-radios.addEventListener('change', function(e){
-  const uploader = document.getElementById('img-uploader');
-  const thumb = document.getElementById('thumb');
+if(radios){
+  radios.addEventListener('change', function(e){
+    const uploader = document.getElementById('img-uploader');
+    const thumb = document.getElementById('thumb');
 
-  if(!e.target.classList.contains('img-radio')){
-    return;
-  }
-  if(e.target.value === 'ownImgConfirm'){
-    console.log("will show thing", e.target.value);
-    
-    uploader.classList.remove('hide')
-    thumb.classList.add('hide')
-    //hide default img
-    //show upload file fields
-  }else if(e.target.value = 'defaultImgConfirm'){
-    console.log("will hide upload", e.target.value)
-    uploader.classList.add('hide')
-    thumb.classList.remove('hide')
-  }
- 
-})
+    if(!e.target.classList.contains('img-radio')){
+      return;
+    }
+    if(e.target.value === 'ownImgConfirm'){
+      console.log("will show thing", e.target.value);
+      
+      uploader.classList.remove('hide')
+      thumb.classList.add('hide')
+      //hide default img
+      //show upload file fields
+    }else if(e.target.value = 'defaultImgConfirm'){
+      console.log("will hide upload", e.target.value)
+      uploader.classList.add('hide')
+      thumb.classList.remove('hide')
+    }
+  
+  })
+}
 
 

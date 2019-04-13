@@ -1,4 +1,7 @@
 const fs = require("fs");
+//file uploader
+
+
 module.exports = {
   getMaxId: function(stuff){
     //return max id of stuff json array
@@ -82,6 +85,31 @@ module.exports = {
     })
  
   }
+  // saveImg: function(theBook, uploadImg, extension){
+  //   return new Promise((resolve,reject)=>{
+      
+     
+        
+  //       //console.log("upload img ", filename)
+  //       uploadImg.mv(`./bookimages/img-${theBook.id}.${extension}` , function(err){
+  //         if(err){
+  //           reject(res.status(500).send(err));
+  //           //OVERWRITE????
+  //         }
+  //         //set the book name in the json data
+  //         theBook.imageurl = `img-${theBook.id}.${extension}`;
+  //         console.log("resolving with ", theBook.imageurl)
+  //         resolve(theBook.imageurl);
+  //         //console.log(theBook.imageurl);
+  //         //console.log("the book \n\n\n\n\n", theBook)
+  //         //console.log("upload image " + req.files.uploadImg.name + " saved");
+          
+  //       })
+  //     //dont need else statement because it's this by default?
+
+
+  //   })
+  //}
 
 
 

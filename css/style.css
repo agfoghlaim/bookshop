@@ -7,6 +7,11 @@
   background: pink;
 }
 
+/* image thumbnail size */
+.thumbnail-size-img{
+  max-width: 150px;
+}
+
 .header{
   width: 100vw;
   height: 90vh;
@@ -36,6 +41,8 @@
   /* border-radius: 10px; */
   justify-content: center;
   justify-items: center;
+  min-height: 600px;
+
  
 }
 
@@ -43,7 +50,7 @@
 
  
  /* transform: translateX(-4000px); */
- transform:translateY(2px);
+ transform:translateX(5px);
  transition: all 0.2s ease-out;
  visibility:hidden;
   /* visibility: hidden;
@@ -54,7 +61,7 @@
 }
 .show{
   visibility: visible;
-  transform: translateY(0px);
+  transform: translatex(0px);
   transition: all 0.4s ease-in;
 
   /* visibility: visible;

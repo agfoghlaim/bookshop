@@ -192,26 +192,15 @@ router.get('/editJsonBook/:id', (req,res)=>{
 //=====================================================
 router.post('/editJsonBook/:id', (req, res)=>{
 
-  //get variables from form
+ 
   const {title, author, description, price, userReview, condition}= req.body;
   const idToFind = parseInt(req.params.id);
-
-  //get new copy of the json file
   const latestBooks = helpers.getLatestBooks();
   
-  //and then...
   latestBooks
   .then(books => {
-
-
-
-    //id of relevant book
-    let i = books.map(b => b.id).indexOf(idToFind);
-   
-    //the relevant book
     const theBook = books.filter(b => b.id===idToFind)[0];
-    
-    //make the changes - to editable fields only
+
     theBook.title = title;
     theBook.author = author; //!!!TODO, What happens if they update author!!??
     theBook.description = description;
@@ -219,72 +208,50 @@ router.post('/editJsonBook/:id', (req, res)=>{
     theBook.userReview = userReview;
     theBook.condition = condition;
 
-    return theBook;
     //====================
     //=== Deal with the image
     //========
-  })
-  .then(theBook =>{
+
         //if an image was uploaded
-        if(req.files){
+        if(req.files.uploadImg){
           const uploadImg = req.files.uploadImg;
           const filename = uploadImg.name;
-
-          //need to save as img-bookid(because people could have imgs with same name.) To do this split the filename and keep after the dot (eg .png)
           const extension = filename.split('.')[1];
-          console.log("upload img ", filename)
           uploadImg.mv(`./bookimages/img-${theBook.id}.${extension}` , function(err){
             if(err){
               return res.status(500).send(err);
-              //OVERWRITE????
             }
-            //set the book name in the json data
-            theBook.imageurl = `img-${theBook.id}.${extension}`;
-            console.log(theBook.imageurl);
-            console.log("the book \n\n\n\n\n", theBook)
-            console.log("upload image " + req.files.uploadImg.name + " saved");
-            
+              theBook.imageurl = `img-${theBook.id}.${extension}`; 
+              //i will be index of the relevant book in json data
+              let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
+              const editedBooks = books.splice(i, 1, theBook);
+              const updated = JSON.stringify(editedBooks, null ,4)
+              fs.writeFile('./models/books.json', updated, 'utf8', err =>{
+                  if(err) {
+                    req.flash("error_msg", `There was a problem editing ${theBook.title}` );
+                    res.redirect('/dashboard')
+                  }else{
+                    //Syncronize the sql version (if there is one)
+                    //1. is forSale true?, AND does it have a shopID?
+                    //2. if so, update sql as well
+                    if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
+                      //need to update book in db too!!
+                      console.log("book is for sale, will update sql")
+                      const string = encodeURIComponent(JSON.stringify(theBook));
+                      res.redirect('/shop/sqleditbook/?bookupdates=' + string);
+                    }else{
+                      console.log("this book is not for sale, done.")
+                    }
+                    req.flash("success_msg", `${theBook.title} edited successfully.` );
+                  }
+              })
           })
-        //dont need else statement because it's this by default?
         }
+        //ie no image uploaded
         else{
           theBook.imageurl = 'default-img.png';
+          console.log("setting default img", req.files)
         }
-    return theBook;
-    //=======
-    //end img
-    //============================
-    })
-    .then(theBook=>{
-    //splice the updated book into the json copy and resave
-    books.splice(parseInt(req.params.id), 1, theBook);
-
-    const updated = JSON.stringify(books, null ,4)
-
-    fs.writeFile('./models/books.json', updated, 'utf8', err =>{
-        if(err) {
-          req.flash("error_msg", `There was a problem editing ${theBook.title}` );
-          res.redirect('/dashboard')
-        }else{
-      
-          //Syncronize the sql version (if there is one)
-          //1. is forSale true?, AND does it have a shopID?
-          //2. if so, update sql as well
-          if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
-            //need to update book in db too!!
-          console.log("book is for sale, will update sql")
-           const string = encodeURIComponent(JSON.stringify(theBook));
-            res.redirect('/shop/sqleditbook/?bookupdates=' + string);
-          
-          }else{
-            //not for sale, no need for sql
-            console.log("this book is not for sale, done.")
-          }
-
-          req.flash("success_msg", `${theBook.title} edited successfully.` );
-          //res.redirect('/dashboard')
-        }
-      })
   }) 
 })
 
@@ -375,6 +342,7 @@ router.post('/addBook', (req,res) =>{
     })
   //else if they choose the google image
   }else if(imageurl){
+    console.log("imageurl ", imageurl)
 
  
   //=======================
