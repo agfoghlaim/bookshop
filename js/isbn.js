@@ -63,7 +63,9 @@ prevBtns.forEach(b => b.addEventListener('click', function(e){goToPrev(e)}))
 
 function goToPrev(e){
   e.preventDefault();
-  console.log("e.target", e.target);
+
+  
+  //console.log("e.target", e.target);
   let backTo = e.target.dataset.backto;
 
   if(e.target.classList.contains('fas')){
@@ -75,7 +77,7 @@ function goToPrev(e){
   }
   const prevStep = `step-${backTo}`;
   const currentStep = `step-${parseInt(backTo)+1}`
-  console.log(currentStep)
+  //console.log(currentStep)
   //hide current step
   document.querySelector(`.${currentStep}`).classList.remove('show')
   document.querySelector(`.${currentStep}`).classList.add('hide')
@@ -83,7 +85,7 @@ function goToPrev(e){
   //show prev step
   document.querySelector(`.${prevStep}`).classList.remove('hide')
   document.querySelector(`.${prevStep}`).classList.add('show')
-  console.log(prevStep);
+ // console.log(prevStep);
   doProgress(backTo)
 }
 
@@ -99,7 +101,12 @@ nextBtns.forEach(b => b.addEventListener('click', function(e){goToNext(e)}))
 
 function goToNext(e){
   e.preventDefault();
-  console.log("e.target", e.target);
+  //do validation for the step in the form before coninuing to the next step
+ 
+
+
+
+  //console.log("e.target", e.target);
   let forwardTo = e.target.dataset.forwardto;
 
   //there is a problem where the fontawesome arrow is big so interfering with the clickable area on the button. If target is a fontawesom icon ('.fas), check if it's parentNode is a next button....
@@ -134,7 +141,7 @@ function doProgress(step){
  
   const progress = document.getElementById('progress');
   const width = (step * 10)*2; 
-  console.log("doing progress", width)
+  //console.log("doing progress", width)
   progress.setAttribute('style', `width:${width}%;`);
 }
 
@@ -173,14 +180,14 @@ if(radios){
       return;
     }
     if(e.target.value === 'ownImgConfirm'){
-      console.log("will show thing", e.target.value);
+      //console.log("will show thing", e.target.value);
       
       uploader.classList.remove('hide')
       thumb.classList.add('hide')
       //hide default img
       //show upload file fields
     }else if(e.target.value = 'defaultImgConfirm'){
-      console.log("will hide upload", e.target.value)
+      //console.log("will hide upload", e.target.value)
       uploader.classList.add('hide')
       thumb.classList.remove('hide')
     }
@@ -202,20 +209,79 @@ if(editRadios){
       return;
     }
     if(e.target.value === 'newImgConfirm'){
-      console.log("will show thing", e.target.value);
       
+      //show the uploader, hide the image
       uploader.classList.remove('hide-1')
       thumb.classList.add('hide-1')
-      //hide default img
-      //show upload file fields
+
+      //Also if they select to upload an image, add required to the upload file input
+      editBookForm.uploadImg.required = true;
+
+      
     }else if(e.target.value = 'keepImgConfirm'){
-      console.log("will hide upload", e.target.value)
+      //console.log("will hide upload", e.target.value)
       uploader.classList.add('hide-1')
       thumb.classList.remove('hide-1')
+
+      //set required upload to false
+      editBookForm.uploadImg.required = false;
     }
   
   })
 }
+
+
+//have to intercept the form submission so the form can be validated, otherwise the html5 validation will stop the form submitting (if there is an error) but the user won't know why
+
+//listen to the save button
+const submitEditBtn = document.getElementById('submit-edit-btn');
+submitEditBtn.addEventListener('click', function(e){validateForm(e)} );
+
+
+function validateForm(e){
+  //stop submitting if called by save btn
+  if(e){
+    e.preventDefault();
+  }
+  
+
+  //is the form valid?
+  let editIsValid = editBookForm.checkValidity();
+ 
+  if(editIsValid){
+    //submit form
+    editBookForm.submit();
+  }else{
+        //show error info on step 5
+    const editFormError = document.getElementById('edit-form-error');
+    editFormError.classList.remove('hide');
+    editFormError.classList.add('show');
+
+    //hide error infor on step 5 (after 5 seconds)
+    setTimeout(function(){
+      editFormError.classList.remove('show');
+      editFormError.classList.add('hide');
+    },5000);
+
+    
+
+
+    //go through form and show relevant errors
+    Array.from(editBookForm).forEach(i=>{
+      if(i.validationMessage){
+        console.log(i.name, " has error")
+        document.getElementById(`${i.name}-error`).textContent = i.validationMessage;
+      }else{
+      // console.log(i.name, "no error")
+      }
+    })
+
+  }
+
+
+}
+
+
 
 
 

@@ -1,5 +1,7 @@
 const fs = require("fs");
 //file uploader
+// const fileUpload = require('express-fileupload');
+// router.use(fileUpload());
 
 
 module.exports = {
@@ -84,33 +86,42 @@ module.exports = {
       })
     })
  
-  }
-  // saveImg: function(theBook, uploadImg, extension){
-  //   return new Promise((resolve,reject)=>{
+  },
+  writeFile: function(req,updated, theBook){
+    return new Promise((resolve,reject)=>{
+      fs.writeFile('./models/books.json', updated, 'utf8', err =>{
+        //console.log("write file has recieved ", theBook.imageurl)
+        //console.log("write has recieved ", updated);
+          if(err) {
+         
+            reject("error_msg", `There was a problem editing ${theBook.title}` )
+            
+          }else{
+            //Syncronize the sql version (if there is one)
+            //1. is forSale true?, AND does it have a shopID?
+            //2. if so, update sql as well
+            //console.log("write file is resolving with ")
+            resolve(theBook);
       
-     
-        
-  //       //console.log("upload img ", filename)
-  //       uploadImg.mv(`./bookimages/img-${theBook.id}.${extension}` , function(err){
-  //         if(err){
-  //           reject(res.status(500).send(err));
-  //           //OVERWRITE????
-  //         }
-  //         //set the book name in the json data
-  //         theBook.imageurl = `img-${theBook.id}.${extension}`;
-  //         console.log("resolving with ", theBook.imageurl)
-  //         resolve(theBook.imageurl);
-  //         //console.log(theBook.imageurl);
-  //         //console.log("the book \n\n\n\n\n", theBook)
-  //         //console.log("upload image " + req.files.uploadImg.name + " saved");
-          
-  //       })
-  //     //dont need else statement because it's this by default?
-
-
-  //   })
-  //}
-
+          }
+      })
+    })
+  }
+  
+  // saveImg: function(theBook, extension,uploadImg ){
+   
+  //   return new Promise(resolve,reject){
+  //     uploadImg.mv(`./bookimages/img-${theBook.id}.${extension}` , function(err){
+  //       if(err){
+  //         return res.status(500).send(err);
+  //       }
+  //        console.log("changing book to whatever they uploaded")
+  //         theBook.imageurl = `img-${theBook.id}.${extension}`; 
+   
+  //     })
+  //   }
+  // }
+ 
 
 
 }

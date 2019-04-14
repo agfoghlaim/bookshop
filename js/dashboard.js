@@ -70,7 +70,7 @@ function populateJsonBooks(books){
       
       <h5>${b.title}<small> by 
       ${b.author}</small></h5>
-      <img src="${b.imageurl}">
+      <img class="thumbnail-size-img"  src="${b.imageurl}">
       <p>${b.description}</p>
       <p>forSale: ${b.forSale}</p>
       <p>Price: ${b.price}</p>

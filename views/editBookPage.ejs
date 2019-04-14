@@ -18,7 +18,8 @@
         <form action="/editJsonBook/<%= b.id %>" 
           method="post"
           accept-charset="UTF-8" 
-          encType="multipart/form-data">
+          encType="multipart/form-data"
+          name="editBookForm">
   
            
           <div class="step-container">   
@@ -28,59 +29,65 @@
             <div class="step step-0 col" id="step-0">
               <!-- <img src="" alt="" id="thumb"> -->
               
-              <div class="form-group">
-                  <label for="comment"><h3 class="book-cursive">Title</h3></label><br>
-                  <input type="text" id="title" name="title" value="<%= b.title %>">
-              </div><br>
-              <div class="form-group">
-                  <label for="comment"><h3 class="book-cursive">Author</h3></label><br>
-                  <input type="text" name="author" id="author" value="<%= b.author %>">
-              </div>
-              <button type="button" class="prevNextBtn btn btn-next" data-forwardto="1" id="">
-                <i class="fas fa-long-arrow-alt-right fa-3x"></i>
-              </button>
+                  <div class="form-group">
+                      <label for="comment"><h3 class="book-cursive">Title</h3></label><br>
+                      <input type="text" id="title" name="title" value="<%= b.title %>">
+                  </div><br>
+                  <div class="form-group">
+                      <label for="comment"><h3 class="book-cursive">Author</h3></label><br>
+                      <input type="text" name="author" id="author" value="<%= b.author %>">
+                  </div>
+               
+                  <button type="button" class="prevNextBtn btn btn-next" data-forwardto="1" id="">
+                    <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                  </button>
+                
             </div>
 
             <!-- step 1 -->
             <div class="step step-1 col hide" id="step-1">
                <!-- decide which image to use, will default to default-img.png if none selected -->
                <h3 class="book-cursive">Image</h3>
-               <div class="form-group edit-img-radios">
-                  <input type="radio"
-                          class="edit-img-radio" 
-                          id="keepImgConfirm" 
-                          name="editImgConfirm" 
-                          value="keepImgConfirm"
-                          checked>
-                  <label for="keepImgConfirm">Keep image</label>
-                  <input type="radio"
-                          class="edit-img-radio" 
-                          id="newImgConfirm" 
-                          name="editImgConfirm" 
-                          value="newImgConfirm">
-                  <label for="newImgConfirm">Upload New</label>
-              </div>
-
-              <div class="form-group ">
-                  
-                <div class="edit-image-section">
-                    <img src="/<%= b.imageurl %>" id="edit-thumb" class="thumbnail-size-img" alt="">
-                    <div class="form-group hide-1" id="edit-img-uploader">
-                        <label for="uploadImg"></label><br>
-                        <input type="file" class="form-control-file" name="uploadImg" id="">  
+               <div class="step-content">
+                    <div class="form-group edit-img-radios">
+                        <input type="radio"
+                                class="edit-img-radio" 
+                                id="keepImgConfirm" 
+                                name="editImgConfirm" 
+                                value="keepImgConfirm"
+                                checked>
+                        <label for="keepImgConfirm">Keep image</label>
+                        <input type="radio"
+                                class="edit-img-radio" 
+                                id="newImgConfirm" 
+                                name="editImgConfirm" 
+                                value="newImgConfirm">
+                        <label for="newImgConfirm">Upload New</label>
                     </div>
-                </div>
-                
-                <p class="text-center">
-                <button type="button" class="prevNextBtn btn btn-prev" data-backto="0" id="">
-                    <i class="fas fa-long-arrow-alt-left fa-3x"></i>
-                </button>
-                <button type="button" class="prevNextBtn btn btn-next" data-forwardto="2" id="">
-                    <i class="fas fa-long-arrow-alt-right fa-3x"></i>
-                </button>
-                </p>
 
-              </div>
+                    <div class="form-group ">
+                        
+                      <div class="edit-image-section text-center">
+                          <img src="/<%= b.imageurl %>" id="edit-thumb" class="thumbnail-size-img" alt="">
+                          <div class="form-group hide-1" id="edit-img-uploader">
+                              <label for="uploadImg"></label>
+                              <input type="file" class="form-control-file" name="uploadImg" id="">  
+                          </div>
+                          <p id="uploadImg-error"></p>
+                      </div>
+                      
+                      <p class="text-center">
+                      <button type="button" class="prevNextBtn btn btn-prev" data-backto="0" id="">
+                          <i class="fas fa-long-arrow-alt-left fa-3x"></i>
+                      </button>
+                      <button type="button" class="prevNextBtn btn btn-next" data-forwardto="2" id="">
+                          <i class="fas fa-long-arrow-alt-right fa-3x"></i>
+                      </button>
+                      </p>
+
+                    </div>
+                  </div><!-- end step content -->
+                  
             </div>       
                
 
@@ -90,7 +97,8 @@
               <div class="step step-2 col hide" id="step-2">
                 <div class="form-group">
                     <label for="price"><h3 class="book-cursive">Price</h3></label><br>
-                    <input class="form-control" rows="15" type="text" name="price" id="price" value="<%= b.price %>">
+                    <input class="form-control" rows="15" type="number" name="price" id="price" min="1" max="10" value="<%= b.price %>" required>
+                    <p id="price-error"></p>
                 </div>
 
                 <p class="text-center">
@@ -160,7 +168,8 @@
             </button>
          
             
-              <input class="btn btn-secondary" type="submit" value="Save">
+              <input class="btn btn-secondary" id="submit-edit-btn" type="submit" value="Save">
+              <p class="edit-form-error hide" id="edit-form-error">It looks like you missed a field, please go back and fix.</p>
             </p>
             </div>
             </div>
