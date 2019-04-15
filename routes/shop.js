@@ -1,18 +1,38 @@
 //for sql/shop related routes
+
+//================================
+/*
+
+1. ADD A BOOK '/addsqlbook/:id'
+
+2. REMOVE A BOOK '/removesqlbook/:id'
+
+3. GET CURRENT USERS BOOKS '/sqlallusersbooks'
+
+4. GET ALL BOOKS FROM DB '/'
+
+5. EDIT A BOOK '/sqleditbook/'
+
+6. RENDER CONTACT SELLER PAGE
+
+7. SAVE MESSAGE FOR SELLER
+
+*/
 const express = require('express');
 const router = express.Router();
+
+//TODO, REMOVE IF NOTHING ENDS UP USING IT
 const { ensureAuthenticated } = require('../config/auth');
 const fs = require("fs");
 const sqldb = require('../config/db');
 
-// //to send post requests
-// const querystring = require('querystring');
-// const http = require('http');
-
-
 //marie's helpers/query file to keep it tidy
 const helpers = require('../helpers');
 
+//to send http requests
+const http = require('http');
+
+//TODO - DELETE (USE helpers.latestBooks instead)
 //get books data from json file (initially)
 var books;
 fs.readFile('./models/books.json', (err,data)=>{
@@ -22,30 +42,13 @@ fs.readFile('./models/books.json', (err,data)=>{
 })
 
 
-//==================================================
-
-// watch for changes in the .json file and update the books variable everytime it changes (Should not be in shop.js???)
-
-//=================================================
-//books = helpers.watchBooks();
-
-// fs.watchFile('./models/books.json', (curr, prev) => {
-//   if(curr){
-//     fs.readFile('./models/books.json', (err,data)=>{
-//       if(err) throw err;
-//       books = JSON.parse(data);
-//       console.log("books updated")
-//     })
-//   } 
-// });
-
-
-
-//add a book to sql db
+/*
+ADD a book to sql db
+*/
 router.get('/addsqlbook/:id', (req,res)=>{
-  
  let books = helpers.getLatestBooks();
   books.then(books =>{
+
     //find (in the json) the book user wants to sell
     const theBook = books.filter(b=>  b.id === parseInt(req.params.id))
 
@@ -103,7 +106,6 @@ router.get('/addsqlbook/:id', (req,res)=>{
       //if author is already in the db
       else{
         //if already saved, use the relevant authorID and add as Foreign Key field authorID in books table (via bookToAdd)
-      
         bookToAdd.authorID = a.authorID;
         
         //THEN save the book 
@@ -187,7 +189,7 @@ router.post('/editsqlbook/:id',(req,res)=>{
 
 router.get('/',(req,res)=>{
 
-  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonID, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonID, books.userBookImage, books.userID, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
   let query = sqldb.query(sql, (err,books)=>{
     if(err) throw err;
 
@@ -232,4 +234,117 @@ router.get('/sqleditbook/', (req,res)=>{
   
 })
 
+// router.get('/contactSeller/:sellerID/:userID/:bookID', (req,res)=>{
+ 
+//   //if user is not logged in redirect to login
+//   if(!req.params.userID){
+//     res.redirect('/users/login');
+//   }else{
+//     //first get details about the book to prepopulate the form
+//     http.get(`http://localhost:5000/shop/query/${req.params.bookID}`, (resp)=>{
+//       console.log(resp)
+//       return resp;
+//     }).on('end',()=>{
+//       console.log("here");
+//       resp.end();
+//     })
+
+
+//     res.render('contactSeller');
+//   }
+  
+// })
+/*
+Render contact seller form
+*/
+router.get('/contactSeller', (req,res)=>{
+ res.render('contactSeller');
+  //if user is not logged in redirect to login
+// console.log(req.body.msg)
+  
+})
+
+
+/*
+Query the db for a book
+TODO  dont need all those params in the url!!!
+TODO - don't think this route is ever used -???
+*/
+
+router.get('/contactSeller/:sellerID/:userID/:bookID',(req,res)=>{
+  const bookID = req.params.bookID;
+  let bookDets = helpers.findOneBook({bookID:bookID},sqldb);
+  bookDets
+  .then(result=>{
+    console.log("the result ", result)
+    res.render('contactSeller', {result})
+  }).catch(err=>console.log(err))
+})
+
+/* 
+Accept a query
+*/
+router.get('/query/:bookID', (req,res)=>{
+  const bookID = req.params.bookID;
+  let bookDets = helpers.findOneBook({bookID:bookID},sqldb);
+  bookDets
+  .then(result=>{
+    console.log("the result ", result)
+    res.send(result)
+  }).catch(err=>console.log(err))
+ 
+})
+
+
+/*
+
+Deal with contact seller form
+(save message to db)
+
+*/
+router.post('/contactSeller', (req,res)=>{
+  //console.log(req.body.message)
+  //save the message somewhere
+  //need the theMsg, bookID, sentID, forID, 
+  const {theMsg, sentID, forID, bookID } = req.body;
+  const messageDets = {theMsg, sentID, forID, bookID}
+  console.log(theMsg, sentID, forID, bookID);
+  const saveMessage = helpers.saveMessage(messageDets, sqldb);
+  saveMessage
+  .then(result=>{
+    console.log("result", result)
+  })
+})
+
+
+/*
+
+CHECK FOR MESSAGES
+
+when users login, they will redirect here
+check if they have messages
+redirect them to the dashboard
+*/
+router.get('/checkMessages', (req,res)=>{
+  if(!req.user){
+    console.log("not signed in !");
+    res.redirect('login');
+  }
+
+  const checkMessages = helpers.checkMessages(req.user.id, sqldb);
+  checkMessages
+  .then(result =>{
+    console.log("msg result ", result)
+   // res.redirect('/dashboard', {result})
+   // res.render('dashboard',{result})
+   const string = encodeURIComponent(JSON.stringify(result));
+
+//redirect to sql edit route
+res.redirect('/dashboard/?messages=' + string);
+  })
+})
+
+
 module.exports = router;
+
+

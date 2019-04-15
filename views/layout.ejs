@@ -14,19 +14,13 @@
 <body>
   <div class="container">
       <div class="row">
+        <nav class="navbar">
           <ul class="nav">
               <li class="nav-item">
                 <a class="nav-link active" href="/">Home</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/users/login">Login</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/users/logout">Logout</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/users/register">register</a>
-                </li>
+              
+             
                 <li class="nav-item">
                     <a class="nav-link" href="/dashboard">Dashboard</a>
                 </li>
@@ -38,11 +32,37 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/shop">Shop</a>
                 </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-              </li>
+
+                <% if(user){ %>
+                  <li class="nav-item"><p class="nav-link"><strong>Welcome <%= user.name %></strong></p></li>
+                <% }else{ %>
+                
+                  <li class="nav-item"><p class="nav-link"><strong>Not logged in</strong></p></li>
+                <% } %>
+
+                <% if(!user){%>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/users/login">Login</a>
+                  </li>
+    
+                    
+                  <li class="nav-item">
+                      <a class="nav-link" href="/users/register">register</a>
+                    </li>
+    
+                  <% }%>
+                  <% if(user){%>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/users/logout">Logout</a>
+                  </li>
+                  
+                
+                    <% }%>
+                
+                
+          
             </ul>
-        
+          </nav>
       </div>
       
       <%- body %>
@@ -50,5 +70,6 @@
   
   <script src="../isbn.js"></script>
   <script src="../dashboard.js"></script>
+  <script src="../message.js"></script>
 </body>
 </html>

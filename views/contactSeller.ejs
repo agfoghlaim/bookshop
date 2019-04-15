@@ -1,0 +1,29 @@
+<h1>contact seller</h1>
+<p id="form-details"></p>
+
+<% result.forEach(function(r){ %>
+  <p>BookID: <%= r.bookID %></p>
+  <p>SentID: <%= user.id %>  </p>
+  <p>ForID: <%= r.userID %> </p>
+  <p>Re: <%= r.bookTitle %> by <%= r.authorName %> </p>
+
+<form action="/shop/contactSeller" method="post">
+ 
+  <!-- hidden fields for bookID, sentID, forID -->
+  <input type="text" style="display:none" name="bookID" value="<%= r.bookID %>">
+  <input type="text" style="display:none" name="sentID" value="<%= user.id %>">
+  <input type="text" style="display:none" name="forID" value="<%= r.userID %>">
+
+  <div class="form-group">
+    <label for="msg">Message</label>
+    <textarea name="theMsg" id="" cols="30" rows="10"></textarea>
+</div>
+
+
+
+
+
+  <button type="subimt">Send</button>
+</form>
+
+<% }) %>

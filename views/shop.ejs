@@ -13,7 +13,15 @@
  <p>json id: <%=b.bookJsonID%></p>
   <p><%= b.bookDescription %></p>
   <p>Price: <%= b.bookPrice || 'no price listed' %></p>
+<h1><%= b.userID %></h1>
 
+<% if(user){ %>
+  <a href="/shop/contactSeller/<%= b.userID %>/<%= user.id %>/<%= b.bookID %>"  data-bookID="<%= b.bookID %>" class="btn btn-primary">Contact Seller</a>
+
+
+ <% }else{ %>
+  <a href="/users/login" class="btn btn-primary" disabled>Login to contact seller</a>
+  <% } %>
   <!-- <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Buy</a> -->
 
 <% }) %>

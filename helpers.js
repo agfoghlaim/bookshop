@@ -106,22 +106,73 @@ module.exports = {
           }
       })
     })
-  }
-  
-  // saveImg: function(theBook, extension,uploadImg ){
-   
-  //   return new Promise(resolve,reject){
-  //     uploadImg.mv(`./bookimages/img-${theBook.id}.${extension}` , function(err){
-  //       if(err){
-  //         return res.status(500).send(err);
-  //       }
-  //        console.log("changing book to whatever they uploaded")
-  //         theBook.imageurl = `img-${theBook.id}.${extension}`; 
-   
-  //     })
-  //   }
-  // }
+  },
+  findOneBook: function(bookID, db){
+    return new Promise((resolve,reject)=>{
+      let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, books.userID, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.bookID = ?`
+     console.log("have book id??" , bookID)
+      let query = db.query(sql, parseInt(bookID.bookID), (err,res)=>{
+        if(err){
+          reject(err)
+        }else{
+          console.log("helper resolve ", res.length)
+          resolve(res)
+        }
+      })
+    })
+  },
+  saveMessage: function(dets,db){
+    console.log("dets: ", dets)
+    return new Promise((resolve,reject)=>{
+      let sql = 'INSERT INTO messages SET ?';
+      let query = db.query(sql, dets, (err,results) => {
+        if(err) {
+          reject('error saving message')
+        }else{
+          resolve(results)
+        }
+      })
+    })
+  },
+  checkMessages: function(userid, db){
+    console.log("userid: ", userid)
+    return new Promise((resolve,reject)=>{
+      let sql = 'SELECT * FROM messages WHERE forID = ?';
+      let query = db.query(sql, userid, (err,results) => {
+        if(err) {
+          reject('error finding message')
+        }else{
+          resolve(results)
+        }
+      })
+    })
+  },
+  // bookHasAssocMsg: function(bookID,sqldb){
+  //   return new Promise((resolve,reject)=>{
+  //    let sql = 'SELECT * from messages WHERE bookID = ?';
+     
+  //    let query = sqldb.query(sql, bookID, (err, res) =>{
+  //      if(err) reject('err');
+  //      //console.log("res is ", res)
+  //      if(!res.length){
+  //        console.log("no messages")
+  //        resolve(false)
+  //      }else if(res.length === 1){
+  //       console.log("author exists", res[0].authorID)
+  //        resolve(res[0])
+  //      }else if(res.length >1){
+  //        //author is in authors table more than once!!
+  //        //use first
+  //         //console.log("this shouldnt happen")
+  //        resolve(res[0])
+        
+  //      }
+  //    });
  
+  //   })
+    
+  //  }
+
 
 
 }

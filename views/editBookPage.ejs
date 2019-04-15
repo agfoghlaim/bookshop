@@ -30,17 +30,20 @@
               <!-- <img src="" alt="" id="thumb"> -->
               
                   <div class="form-group">
-                      <label for="comment"><h3 class="book-cursive">Title</h3></label><br>
+                      <h3 class="book-cursive">Title</h3>
+                      <label for="comment"></label><br>
                       <input type="text" id="title" name="title" value="<%= b.title %>">
                   </div><br>
                   <div class="form-group">
-                      <label for="comment"><h3 class="book-cursive">Author</h3></label><br>
+                      <h3 class="book-cursive">Author</h3>
+                      <label for="comment"></label><br>
                       <input type="text" name="author" id="author" value="<%= b.author %>">
                   </div>
-               
+                  <p class="text-center editArrows">  
                   <button type="button" class="prevNextBtn btn btn-next" data-forwardto="1" id="">
                     <i class="fas fa-long-arrow-alt-right fa-3x"></i>
                   </button>
+                </p>
                 
             </div>
 
@@ -68,7 +71,7 @@
                     <div class="form-group ">
                         
                       <div class="edit-image-section text-center">
-                          <img src="/<%= b.imageurl %>" id="edit-thumb" class="thumbnail-size-img" alt="">
+                          <img src="<%= b.imageurl %>" id="edit-thumb" class="thumbnail-size-img" alt="">
                           <div class="form-group hide-1" id="edit-img-uploader">
                               <label for="uploadImg"></label>
                               <input type="file" class="form-control-file" name="uploadImg" id="">  
@@ -76,7 +79,7 @@
                           <p id="uploadImg-error"></p>
                       </div>
                       
-                      <p class="text-center">
+                      <p class="text-center editArrows">
                       <button type="button" class="prevNextBtn btn btn-prev" data-backto="0" id="">
                           <i class="fas fa-long-arrow-alt-left fa-3x"></i>
                       </button>
@@ -101,7 +104,7 @@
                     <p id="price-error"></p>
                 </div>
 
-                <p class="text-center">
+                <p class="text-center editArrows">
                   <button type="button" class="prevNextBtn btn btn-prev" data-backto="1" id="">
                     <i class="fas fa-long-arrow-alt-left fa-3x"></i>
                   </button>
@@ -116,11 +119,12 @@
               <!-- step 3 -->
               <div class="step step-3 col hide" id="step-3">
                   <div class="form-group">
-                    <label for="comment"><h3 class="book-cursive">Description</h3></label><br>
+                    <h3 class="book-cursive">Description</h3>
+                    <label for="comment"></label><br>
                     <textarea class="form-control" rows="10" cols="100" type="textarea" name="description" id="description" value="<%= b.description %>"><%= b.description %></textarea>
                   </div>
 
-                <p class="text-center">
+                <p class="text-center editArrows">
                   <button type="button" class="prevNextBtn btn btn-prev" data-backto="2" id="">
                       <i class="fas fa-long-arrow-alt-left fa-3x"></i>
                   </button>
@@ -133,11 +137,12 @@
               <!-- step 4 -->
               <div class="step step-4 col hide" id="step-4">
                 <div class="form-group">
-                  <label for="userReview"><h3 class="book-cursive">Review</h3></label><br>
+                    <h3 class="book-cursive">Review</h3>
+                  <label for="userReview"></label><br>
                   <textarea class="form-control" rows="10" cols="100" type="textarea" name="userReview" id="userReview" value="<%= b.userReview %>"><%= b.userReview %></textarea>
                 </div>
 
-                <p class="text-center">
+                <p class="text-center editArrows">
                   <button type="button" class="prevNextBtn btn btn-prev" data-backto="3" id="">
                       <i class="fas fa-long-arrow-alt-left fa-3x"></i>
                   </button>
@@ -162,7 +167,7 @@
 
                 
 
-              <p class="text-center">
+              <p class="text-center editArrows">
               <button type="button" class="prevNextBtn btn btn-prev" data-backto="4" id="">
                 <i class="fas fa-long-arrow-alt-left fa-3x"></i>
             </button>

@@ -2,6 +2,18 @@
 <p>Welcome <%= user.name %></p>
 <% include ./partials/messages %>
 
+<% if(userMessages){ %>
+  <h5>You have <%= userMessages.length %> messages.</h5>
+  
+
+  <% userMessages.forEach(function(b,i){ %>
+   
+    <p class="dashboard-message-head"><%= i+1 %>. <small>Sent on <%= b.msgWhen.substr(0,10) %>
+    at <%= b.msgWhen.substr(11,5) %></small></p>
+    
+    <p class="dashboard-message"><%= b.theMsg %></p>
+    <% }) %>
+  <% } %>
 
 <div class="container">
   <div class="row">
@@ -13,7 +25,11 @@
         <% usersBooks.forEach(function(b){ %>
           <h5><%= b.title %><small> by 
           <%= b.author %></small></h5>
+
+         
           <img class="thumbnail-size-img" src="<%= b.imageurl %>">
+         
+
           <p><%= b.description %></p>
           <p>forSale: <%= b.forSale %></p>
           <p>Price: <%= b.price || 'no price listed' %></p>
