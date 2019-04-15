@@ -1,12 +1,55 @@
 <% include ./partials/header %>
-<!-- <h1>Welcome to The BookKeeper</h1> -->
+
+<section class="home-section">
+    <div class="row">
+        <h1 class="text-center">Welcome to The BookKeeper</h1>
+    
+    </div>
+    <div class="row">
+      <div class="col-12-md">
+        <p class="text-center">
+          Where you can keep track of the books you own.
+        </p>
+        <p class="text-center">And sell books to other users.</p>
+      </div>
+    </div>
 
 
-<% if(user){ %>
-  <p>Welcome <%= user.name %></p>
-<% }else{ %>
 
-  <p>Welcome, not logged in</p>
-<% } %>
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+              <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-success">Register</strong>
+                <h3 class="mb-0">Sign Up</h3><br>
+                
+                <p class="mb-auto">Sign up to keep track of your book collection.</p><br>
+                  <p class="text-center"> <a href="/users/register" class="btn btn-primary">Register Now</a></p>
+                 
+              </div>
+       
+            </div>
+          </div>
+        <div class="col-md-6">
+          <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-success">Log in</strong>
+              <h3 class="mb-0">Login</h3><br>
+              
+              <p class="mb-auto">Easily add your books to the shop when you want to sell them.</a>
+                <p class="text-center"> <a href="/users/login" class="btn btn-primary">Login Now</a></p>
+               
+            </div>
+     
+          </div>
+        </div>
+      </div>
+
+
+    
+</section>
+
+
+
 
 

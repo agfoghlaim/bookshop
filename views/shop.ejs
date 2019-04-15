@@ -1,27 +1,46 @@
-<h1>The shop <small>All books(all users) from sqldb</small></h1>
-<% books.forEach(function(b){ %>
-  <h5><%= b.bookTitle %><small> by 
-  <%= b.authorName %></small></h5>
-  <h2><%= b.userName %></h2>
- 
-  <!-- <img src="/img-<%= b.bookJsonID %>.jpg" alt=""> -->
-  <p>Image from sql db:<%= b.userBookImage%></p>
-  <img src="<%= b.userBookImage%>" alt="" class="thumbnail-size-img">
-  
-  <!-- <img src="/default-img.PNG" alt=""> -->
- 
- <p>json id: <%=b.bookJsonID%></p>
-  <p><%= b.bookDescription %></p>
-  <p>Price: <%= b.bookPrice || 'no price listed' %></p>
-<h1><%= b.userID %></h1>
 
-<% if(user){ %>
-  <a href="/shop/contactSeller/<%= b.userID %>/<%= user.id %>/<%= b.bookID %>"  data-bookID="<%= b.bookID %>" class="btn btn-primary">Contact Seller</a>
+<div class="page-heading">
+    <h1 class="text-center"><small>You are...</small><br><br><span class="book-cursive ">Shopping</span> </h1>
+</div>
+
+<div class="container">
+  <div class="section shop-section">
+    <div class="row">
+    <% books.forEach(function(b){ %>
+    <div class="shop-item col col-md-12">
+
+        <h5><span class="make-cursive"><%= b.bookTitle %></span><br><small> by 
+        <%= b.authorName %></small></h5>
+        <h2><%= b.userName %></h2>
+      
+        <!-- <img src="/img-<%= b.bookJsonID %>.jpg" alt=""> -->
+        <!-- <p>Image from sql db:<%= b.userBookImage%></p> -->
+        <img src="<%= b.userBookImage%>" alt="" class="thumbnail-size-img">
+        
+        <!-- <img src="/default-img.PNG" alt=""> -->
+      
+      <p>book id: <%=b.bookJsonID%></p>
+      <h6>Description</h6>
+        <p><%= b.bookDescription %></p>
+      <h6>Price</h6>
+        <p>€ <%= b.bookPrice || 'no price listed' %></p>
+        <h6>Condition</h6>
+        <p> <%= b.bookCondition || 'not specified' %></p>
+        <h6>Review</h6>
+        <p> <%= b.userReview || 'not specified' %></p>
+      <!-- <p><%= b.userID %></p> -->
+
+      <% if(user){ %>
+        <a href="/shop/contactSeller/<%= b.userID %>/<%= user.id %>/<%= b.bookID %>"  data-bookID="<%= b.bookID %>" class="btn btn-light">Contact Seller</a>
 
 
- <% }else{ %>
-  <a href="/users/login" class="btn btn-primary" disabled>Login to contact seller</a>
-  <% } %>
-  <!-- <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Buy</a> -->
-
-<% }) %>
+      <% }else{ %>
+        <a href="/users/login" class="btn btn-light" disabled>Login to contact seller</a>
+        <% } %>
+        <!-- <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Buy</a> -->
+    </div><!-- end shop item -->
+    
+    <% }) %>
+  </div><!-- end shop row -->
+</div>
+</div>

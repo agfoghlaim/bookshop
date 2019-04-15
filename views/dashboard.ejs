@@ -2,7 +2,7 @@
 <p>Welcome <%= user.name %></p>
 <% include ./partials/messages %>
 
-<% if(userMessages){ %>
+<% if(typeof userMessages != 'undefined'){ %>
   <h5>You have <%= userMessages.length %> messages.</h5>
   
 

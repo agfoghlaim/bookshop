@@ -21,24 +21,12 @@
               </li>
               
              
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">Dashboard</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/addBookPage">Add Product</a>
-                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="/shop">Shop</a>
                 </li>
 
-                <% if(user){ %>
-                  <li class="nav-item"><p class="nav-link"><strong>Welcome <%= user.name %></strong></p></li>
-                <% }else{ %>
-                
-                  <li class="nav-item"><p class="nav-link"><strong>Not logged in</strong></p></li>
-                <% } %>
+               
 
                 <% if(!user){%>
                   <li class="nav-item">
@@ -55,6 +43,22 @@
                   <li class="nav-item">
                     <a class="nav-link" href="/users/logout">Logout</a>
                   </li>
+
+                  
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/addBookPage">Add Product</a>
+                </li>
+
+                <% if(user){ %>
+                  <li class="nav-item"><p class="nav-link"><strong>Welcome <%= user.name %></strong></p></li>
+                <% }else{ %>
+                
+                  <li class="nav-item"><p class="nav-link"><strong>Not logged in</strong></p></li>
+                <% } %>
                   
                 
                     <% }%>
@@ -66,7 +70,10 @@
       </div>
       
       <%- body %>
+      
   </div>
+  <footer class="footer">The Book Keeper 2019</footer>
+  
   
   <script src="../isbn.js"></script>
   <script src="../dashboard.js"></script>

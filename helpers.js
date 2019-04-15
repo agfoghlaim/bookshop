@@ -122,7 +122,7 @@ module.exports = {
     })
   },
   saveMessage: function(dets,db){
-    console.log("dets: ", dets)
+    //console.log("dets: ", dets)
     return new Promise((resolve,reject)=>{
       let sql = 'INSERT INTO messages SET ?';
       let query = db.query(sql, dets, (err,results) => {
@@ -147,31 +147,40 @@ module.exports = {
       })
     })
   },
-  // bookHasAssocMsg: function(bookID,sqldb){
-  //   return new Promise((resolve,reject)=>{
-  //    let sql = 'SELECT * from messages WHERE bookID = ?';
+  bookHasAssocMsg: function(bookID,sqldb){
+    return new Promise((resolve,reject)=>{
+     let sql = 'SELECT * from messages WHERE bookID = ?';
      
-  //    let query = sqldb.query(sql, bookID, (err, res) =>{
-  //      if(err) reject('err');
-  //      //console.log("res is ", res)
-  //      if(!res.length){
-  //        console.log("no messages")
-  //        resolve(false)
-  //      }else if(res.length === 1){
-  //       console.log("author exists", res[0].authorID)
-  //        resolve(res[0])
-  //      }else if(res.length >1){
-  //        //author is in authors table more than once!!
-  //        //use first
-  //         //console.log("this shouldnt happen")
-  //        resolve(res[0])
-        
-  //      }
-  //    });
+     let query = sqldb.query(sql, bookID, (err, res) =>{
+       if(err) reject('err');
+       //console.log("res is ", res)
+       if(!res.length){
+         console.log("no messages")
+         resolve(false)
+       }else{
+        console.log("messages exist", res.length)
+         resolve(res)
+       }
+     });
  
-  //   })
+    })
     
-  //  }
+   },
+   deleteAssocMsgs: function(bookID,sqldb){
+    return new Promise((resolve,reject)=>{
+     let sql = 'DELETE from messages WHERE bookID = ?';
+     
+     let query = sqldb.query(sql, bookID, (err, res) =>{
+       if(err) reject('err');
+       console.log("result length of msgs deleted: ", res.affectedRows)
+      
+      resolve(res.affectedRows)
+       
+     });
+ 
+    })
+    
+   }
 
 
 

@@ -66,12 +66,12 @@ router.get('/', (req,res) => {
 //dashboard (when user signs in)
 router.get('/dashboard', ensureAuthenticated, (req,res) => { 
   //checkMessages redirects here with a querystring called messages
-  let userMessages;
+  let userMessages ='';
   if(req.query.messages){
-    console.log("got messages ", req.query.messages)
+   // console.log("got messages ", req.query.messages)
      //req from editjsonbook in index.js
     // const {msgID, bookID, sentID,forID,theMsg}= JSON.parse(req.query.messages);
-    console.log("msgs ", req.query.messages)
+   // console.log("msgs ", req.query.messages)
     userMessages = JSON.parse(req.query.messages); 
   }
   //get all books from the json file with current user's id
@@ -84,7 +84,12 @@ router.get('/dashboard', ensureAuthenticated, (req,res) => {
     //console.log("users books length ", usersBooks.length)
     console.log("sending " + usersBooks.length + " books to dashboard")
    // console.log("sending these books to dashboard ", usersBooks)
+   if(userMessages !== ''){
     res.render('dashboard', {usersBooks, userMessages})
+   }else{
+    res.render('dashboard', {usersBooks})
+   }
+    
   });
   
 })
@@ -141,8 +146,11 @@ router.get('/deleteBookclient/:id', (req,res)=>{
     shopID = books.filter(b => b.id === parseInt(req.params.id))[0].shopID;
     console.log("forsale: and shop ", forSale, shopID)
 
-    //return books without the deleted book
-    return books.filter(b =>  b.id !== parseInt(req.params.id));
+    //return ALL books without the deleted book
+    //need to return ALL USEERS Books
+    return books.filter(b =>  b.id !== parseInt(req.params.id) && b.userID === req.user.id);
+
+    
   })
       //resave books
   .then(newBooks => JSON.stringify(newBooks, null, 4)) 
@@ -401,18 +409,21 @@ router.post('/editJsonBook/:id', (req, res)=>{
           
                 //write the file....
                  let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
+                 console.log("title and req.params.title", title, req.params.title);
+                 theBook.title = title;
+                 theBook.author = author; 
+                 theBook.description = description;
+                 theBook.price = price;
+                 theBook.userReview = userReview;
+                 theBook.condition = condition;
+
                  const editedBooks = books;
                  editedBooks.splice(i,1,theBook);
         
                  
                  const updated = JSON.stringify(editedBooks, null ,4)
                  const writeFile = helpers.writeFile(req, updated, theBook);
-                   theBook.title = title;
-                   theBook.author = author; 
-                   theBook.description = description;
-                   theBook.price = price;
-                   theBook.userReview = userReview;
-                   theBook.condition = condition;
+              
            
                      
                    writeFile.then(theBook=>{
@@ -426,8 +437,12 @@ router.post('/editJsonBook/:id', (req, res)=>{
                          res.redirect('/shop/sqleditbook/?bookupdates=' + string);
                        }else{
                          console.log("this book is not for sale, done.")
+                         req.flash("success_msg", `${theBook.title} edited successfully.` );
+                         //redirect to dashboard via checkMessages
+                         res.redirect('/shop/checkMessages')
                        }
-                       req.flash("success_msg", `${theBook.title} edited successfully.` );
+                      
+
                    }).catch(err =>{
                      req.flash(err);
                        res.redirect('/dashboard')
@@ -436,24 +451,23 @@ router.post('/editJsonBook/:id', (req, res)=>{
           })
           
         }else{
-             //also just write the file - TODO fix this, repetitive
-             //write the file....
+             //no file uploaded
            let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
-          // console.log("i is ", i, " so replacing ", books[i], " with ", theBook)
-           //const editedBooks = books.splice(i, 1, theBook);
+           console.log("title and req.params.title2", title, req.params.title)
+           theBook.title = title;
+           theBook.author = author; 
+           theBook.description = description;
+           theBook.price = price;
+           theBook.userReview = userReview;
+           theBook.condition = condition;
+          
            const editedBooks = books;
            editedBooks.splice(i,1,theBook);
            //console.log("putting in ", theBook, " at ", editedBooks[i])
            const updated = JSON.stringify(editedBooks, null ,4)
            //console.log("and updated is ", updated)
            const writeFile = helpers.writeFile(req, updated, theBook);
-
-           theBook.title = title;
-           theBook.author = author; //!!!TODO, What happens if they update author!!??
-           theBook.description = description;
-           theBook.price = price;
-           theBook.userReview = userReview;
-           theBook.condition = condition;
+          
     
          
              writeFile.then(theBook=>{
@@ -462,9 +476,14 @@ router.post('/editJsonBook/:id', (req, res)=>{
                    //update sql
                    const string = encodeURIComponent(JSON.stringify(theBook));
                    res.redirect('/shop/sqleditbook/?bookupdates=' + string);
+                 }else{
+                   console.log("not in shop")
+                   req.flash("success_msg", `${theBook.title} edited successfully.` );
+                         //redirect to dashboard via checkMessages
+                         res.redirect('/shop/checkMessages')
                  }
 
-                 req.flash("success_msg", `${theBook.title} edited successfully.` );
+              
              }).catch(err =>{
                req.flash("error_msg", `${theBook.title} error saving to db.`);
                  res.redirect('/dashboard')

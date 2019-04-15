@@ -65,6 +65,7 @@ router.get('/addsqlbook/:id', (req,res)=>{
       bookTitle: theBook[0].title,
       bookImage: '',
       bookDescription: theBook[0].description,
+      bookCondition: theBook[0].condition,
       userID: req.user.id,
       bookPrice: theBook[0].price,
       authorID: '',
@@ -140,10 +141,26 @@ router.get('/addsqlbook/:id', (req,res)=>{
 //=============================================
 router.get('/removesqlbook/:id', (req,res)=>{
   console.log("deleting sql book with id ", req.params.id)
+
   let bookid = parseInt(req.params.id)
   let sql = `DELETE FROM books WHERE bookID = ${bookid};`;
-  let query = sqldb.query(sql, (err,result)=>{
-    if(err) throw err;
+
+  let deleteAssocMsgs = helpers.deleteAssocMsgs(bookid,sqldb);
+  deleteAssocMsgs
+  .then(msg=>{
+    console.log("Num msgs deleted ", msg)
+    
+  })
+  .then(()=>{
+    //now removing the book from the shop
+    console.log("now removing the book from the shop")
+    let query = sqldb.query(sql, (err,result)=>{
+      if(err) throw err;
+      console.log("now redirecting to get all your books")
+      res.redirect('/shop/sqlallusersbooks')
+  })
+})
+  
     //!!!!!
     //!!!
     //update json to not for sale
@@ -152,9 +169,9 @@ router.get('/removesqlbook/:id', (req,res)=>{
     //redirect to get all books (front end fetch expects array of books which will eventually be sent from /sqlaluserbooks)
 
     //res.send(result)
-   res.redirect('/shop/sqlallusersbooks')
+  
     
-  })
+  
 })
 
 
@@ -171,7 +188,7 @@ router.get('/sqlallusersbooks',(req,res)=>{
     if(err) throw err;
 
     //just send, client will deal with it
-    console.log("SQL sending ", result)
+    //console.log("SQL sending ", result)
     res.send(result)
   })
 })
@@ -189,7 +206,7 @@ router.post('/editsqlbook/:id',(req,res)=>{
 
 router.get('/',(req,res)=>{
 
-  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonID, books.userBookImage, books.userID, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription, books.userReview, books.bookCondition,books.bookJsonID, books.userBookImage, books.userID, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID`;
   let query = sqldb.query(sql, (err,books)=>{
     if(err) throw err;
 
@@ -210,14 +227,14 @@ router.get('/sqleditbook/', (req,res)=>{
   //console.log(req.query.bookupdates);
 
   //req from editjsonbook in index.js
-    const {title, author, description, price, userReview, condition,shopID }= JSON.parse(req.query.bookupdates);
+    const {title, author, description, price, userReview, condition,shopID,imageurl }= JSON.parse(req.query.bookupdates);
     
   
   //need to do the sql update
   //then redirect? 
   let sqlauthor = `UPDATE authors SET authorName="${author}" WHERE authorID = (SELECT authorID FROM books WHERE bookID=${shopID})`;
 
-  let sqlbook = `UPDATE books SET bookTitle="${title}", bookDescription="${description}", bookPrice="${price}", userReview="${userReview}", bookCondition="${condition}" WHERE bookID=${shopID}`;
+  let sqlbook = `UPDATE books SET bookTitle="${title}", bookDescription="${description}", bookPrice="${price}", userReview="${userReview}", userBookImage="${imageurl}", bookCondition="${condition}" WHERE bookID=${shopID}`;
 
   let bothQueries= sqldb.query(`${sqlauthor}; ${sqlbook}`, (err,result,fields)=>{
     if(err){
@@ -276,7 +293,7 @@ router.get('/contactSeller/:sellerID/:userID/:bookID',(req,res)=>{
   let bookDets = helpers.findOneBook({bookID:bookID},sqldb);
   bookDets
   .then(result=>{
-    console.log("the result ", result)
+    //console.log("the result ", result)
     res.render('contactSeller', {result})
   }).catch(err=>console.log(err))
 })
@@ -313,6 +330,8 @@ router.post('/contactSeller', (req,res)=>{
   saveMessage
   .then(result=>{
     console.log("result", result)
+    req.flash("success_msg", `Message sent.` );
+    res.redirect('/shop/checkMessages')
   })
 })
 
@@ -334,11 +353,11 @@ router.get('/checkMessages', (req,res)=>{
   const checkMessages = helpers.checkMessages(req.user.id, sqldb);
   checkMessages
   .then(result =>{
-    console.log("msg result ", result)
+   // console.log("msg result ", result)
    // res.redirect('/dashboard', {result})
    // res.render('dashboard',{result})
    const string = encodeURIComponent(JSON.stringify(result));
-
+  
 //redirect to sql edit route
 res.redirect('/dashboard/?messages=' + string);
   })

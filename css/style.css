@@ -38,6 +38,7 @@ textarea.form-control {
   padding: 3em;
   display: grid;
   align-items: center;
+
 }
 
 
@@ -243,6 +244,7 @@ add book page
 .step-container{
   position: relative;
   height: 95vh;
+ 
 }
 .step-container h3,.step-container h5,.step-container p,.step-container label{
   color: white;
@@ -281,4 +283,42 @@ Dashboard Messages
 
 }
 
+/* 
+shop page
+
+*/
+.shop-section{
+ margin-top: 1em;
+}
+.shop-item{
+  background: linear-gradient(#1ba455,#1ba45594);
+  margin: 1em 0;
+  padding:2em;
+}
+
+.shop-item h6, .shop-item h5{
+  color: var(--light);
+}
+/* .shop-item h5{
+  font-family: 'Pacifico', cursive;
+  font-weight: 100;
+} */
+
+.make-cursive{
+  font-family: 'Pacifico', cursive;
+  font-weight: 100;
+}
+
+.footer{
+  background: #febe10;
+    padding: 3em;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-section{
+  padding:3em;
+  margin: 2em 0;
+}
 

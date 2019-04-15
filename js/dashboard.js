@@ -8,36 +8,42 @@
 //     deleteBook(e)
 //   });
 // }
-
+//delete a json book()
 const booksColumn = document.getElementById('dashboard-json-col');
 booksColumn.addEventListener('click', function(e){
   deleteBook(e);
 })
 
+/*
+//req to /deletebookclient
+will respond with json books, poputlateJsonBooks()
+//then if the book was for sale, send req to shop/removesqlbook
+this will delete the book and any associated messages, will redirect ot shop/asqlallusers books and eventually respond with the user's sql/shop books.
+Then run populateBooks()
+*/
 function deleteBook(e){
-  //console.log("delete", e.target)
+  
   if(!e.target.dataset.bookid){
-    console.log("not a delete btn")
     return;
-  }else{
-   // console.log("is a del button")
   }
+  //is the book for sale? (ie seconde fetch request)
   const forSale = e.target.dataset.forsale;
- // console.log("FORSALE", e.target.dataset.forsale);
-  //if(e.target.bookid)
-  //check if book is for sale
+  
+  //req to delete the book
   fetch(`/deleteBookclient/${e.target.dataset.bookid}`) 
   .then(data=> data.json())
   .then(books => {
-    //console.log(books);
-    console.log("got delete book, populating...")
-    //populate page with updated books
+    
+    console.log("got delete book, populating...", books)
+
     populateJsonBooks(books);
-    //console.log("HEREEE ", "forsale: " + forSale, (forSale===false))
+    
+    //end if book not for sale
     if(!forSale || forSale === 'false'){
       console.log("C: not for sale")
       return;
     }else{
+      //req to delete the sql boook
       console.log("book was for sale, sending sql request with shopid...", forSale, e.target.dataset.shopid)
       fetch(`/shop/removesqlbook/${e.target.dataset.shopid}`)
       .then(data => data.json())
@@ -80,7 +86,8 @@ function populateJsonBooks(books){
       <a href="/shop/addsqlbook/${b.id}" class="btn btn-primary">Sell</a>
       </div>
       `;
-      jsonBooksCol.insertAdjacentHTML('beforeend', str); 
+      //jsonBooksCol.insertAdjacentHTML('beforeend', str); 
+      jsonBooksCol.innerHTML=str; 
     })
 
   }
