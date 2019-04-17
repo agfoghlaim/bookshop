@@ -1,3 +1,13 @@
+body{
+  background-color: #febe1017;
+}
+
+.bookkeeper-container{
+  background: var(--light);
+}
+.the-content{
+  min-height: 100vh;
+}
 /* header */
 #logo{
   width:20vw;
@@ -18,15 +28,19 @@ textarea.form-control {
   margin: 1em 0;
 }
 
-.header{
-  width: 100vw;
-  height: 90vh;
-  background-image: linear-gradient(#ecf3ece8, #ebf9ecc4),url(/bookheader.jpg);
+.home-header{
+ 
+  height: 50vh;
+  background-image: linear-gradient(#1ba453e8, #1ba455ed),url(/bookheader.jpg);
+  /* background-image: linear-gradient(#ecf3ece8, #ebf9ecc4),url(/bookheader.jpg); */
   background-size: cover;
   background-position: center;
   display: grid;
   justify-content: center;
   align-content: center;
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+  box-shadow:         3px 3px 5px 6px #ccc;
 }
 .header h1{
   color: white;
@@ -38,6 +52,9 @@ textarea.form-control {
   padding: 3em;
   display: grid;
   align-items: center;
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+  box-shadow:         3px 3px 5px 6px #ccc;
 
 }
 
@@ -59,6 +76,9 @@ textarea.form-control {
   align-items:center;
   align-content: center;
   min-height: 600px;
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+  box-shadow:         3px 3px 5px 6px #ccc;
 
  
 }
@@ -319,6 +339,8 @@ shop page
 
 .home-section{
   padding:3em;
-  margin: 2em 0;
+  /* margin: 2em 0; */
 }
-
+.home-info-row{
+  margin: 1em 0;
+}

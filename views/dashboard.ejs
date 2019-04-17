@@ -1,4 +1,9 @@
-<h1>Dashboard</h1>
+<div class="page-heading">
+    <h1 class="text-center"><span class="book-cursive ">The Dashboard</span> </h1>
+    <p class="text-center">
+      
+      </p>
+</div>
 <p>Welcome <%= user.name %></p>
 <% include ./partials/messages %>
 
@@ -33,12 +38,12 @@
           <p><%= b.description %></p>
           <p>forSale: <%= b.forSale %></p>
           <p>Price: <%= b.price || 'no price listed' %></p>
-          <a href="/deleteBook/<%= b.id %>" class="btn btn-danger">Delete</a>
+         
           <button class="btn btn-danger" 
                   data-bookid="<%= b.id %>" 
                   id="deleteJsonBook"
                   data-forSale="<%= b.forSale %>"
-                  data-shopid="<%= b.shopID %>">Delete (clientside)</button>
+                  data-shopid="<%= b.shopID %>">Delete</button>
           <a href="/editJsonBook/<%= b.id %>" class="btn btn-info">Edit</a>
           <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Sell</a>
         

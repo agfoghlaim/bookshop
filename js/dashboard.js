@@ -157,6 +157,7 @@ function populateBooks(books){
     let str = `<p>You have no books for sale.</p>`;
     shopBooks.innerHTML = str;
   }else{
+    //shopBooks.innerHTML = '';
     console.log("sql books", books)
     books.map(b=>{
       let str = `
@@ -165,11 +166,12 @@ function populateBooks(books){
       </small></h5>
       <p>${b.bookDescription}</p>
       <p>Price:${b.bookPrice}</p>
-      <a href="/shop/removeqlbook/${b.bookID}" class="btn btn-danger">Remove from shop</a>
-      <button class="btn btn-danger removeFrom" data-bookID="${b.bookID}"  data-bookJsonID="${b.bookJsonId}" id="removeFromShop-${b.bookID}">Remove from shop(clientside)</button>
+     
+      <button class="btn btn-danger removeFrom" data-bookID="${b.bookID}"  data-bookJsonID="${b.bookJsonId}" id="removeFromShop-${b.bookID}">Remove from shop</button>
       </div>
       `;
       shopBooks.insertAdjacentHTML('beforeend', str); 
+      //shopBooks.innerHTML = str;
     })
 
   }
