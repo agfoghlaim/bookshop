@@ -174,12 +174,113 @@ module.exports = {
        if(err) reject('err');
        console.log("result length of msgs deleted: ", res.affectedRows)
       
-      resolve(res.affectedRows)
-       
+      resolve(res.affectedRows) 
      });
- 
     })
-    
+   },
+
+   createTheDb: function(sqldb){
+     return new Promise((resolve,reject)=>{
+      //let createDB = `CREATE DATABASE pretendbookshop;`;
+      let use = `use pretendbookshop;`;
+       let authors = `CREATE TABLE authors (
+        authorID int(11) NOT NULL,
+        authorName varchar(255) NOT NULL,
+        PRIMARY KEY (authorID)
+      );`;
+       let books = `CREATE TABLE books (
+        bookID int(11) NOT NULL,
+        bookTitle varchar(255) NOT NULL,
+        bookImage varchar(255) DEFAULT NULL,
+        bookDescription text,
+        userID varchar(255) NOT NULL,
+        bookPrice int(11) NOT NULL,
+        authorID int(11),
+        userReview text NOT NULL,
+        userBookImage varchar(255) DEFAULT NULL,
+        bookCondition varchar(255) NOT NULL,
+        bookJsonID int(11) DEFAULT NULL,
+        PRIMARY KEY (bookID),
+        FOREIGN KEY (authorID) REFERENCES authors(authorID)
+      );`;
+
+      let messages = `CREATE TABLE messages (
+        msgID int(11) NOT NULL,
+        bookID int(11) DEFAULT NULL,
+        sentID varchar(255) NOT NULL,
+        forID varchar(255) NOT NULL,
+        theMsg text NOT NULL,
+        msgWhen datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (msgID)
+      );`;
+     
+
+       let query = sqldb.query(`${authors} ${books} ${messages}`, (err,res)=>{
+         if(err) reject(err);
+         console.log("authors created");
+         resolve(res);
+       })
+     })
+   },
+   exactDump: function(sqldb){
+    return new Promise((resolve,reject)=>{
+      //let createDB = `CREATE DATABASE pretendbookshop;`;
+      let use = `use pretendbookshop;`;
+       let authors = `CREATE TABLE authors (
+        authorID int(11) NOT NULL,
+        authorName varchar(255) NOT NULL
+      );`;
+       let books = `CREATE TABLE books (
+        bookID int(11) NOT NULL,
+        isbn varchar(255) DEFAULT NULL,
+        bookTitle varchar(255) NOT NULL,
+        bookImage varchar(255) DEFAULT NULL,
+        bookDescription text,
+        userID varchar(255) DEFAULT NULL,
+        bookPrice int(11) NOT NULL,
+        authorID int(11) NOT NULL,
+        userReview text,
+        userBookImage varchar(255) DEFAULT NULL,
+        bookCondition varchar(255) DEFAULT NULL,
+        bookJsonID int(11) DEFAULT NULL
+      );`;
+
+      let messages = `CREATE TABLE messages (
+        msgID int(11) NOT NULL,
+        bookID int(11) NOT NULL,
+        sentID varchar(255) NOT NULL,
+        forID varchar(255) NOT NULL,
+        theMsg text NOT NULL,
+        msgWhen datetime DEFAULT CURRENT_TIMESTAMP
+      );`;
+
+      let alter1 = `ALTER TABLE authors
+      ADD PRIMARY KEY (authorID);`;
+      let alter2 = `ALTER TABLE books
+      ADD PRIMARY KEY (bookID),
+      ADD KEY authorID (authorID);`;
+      let alter3 = `ALTER TABLE messages
+      ADD PRIMARY KEY (msgID),
+      ADD KEY bookID (bookID);`;
+      let alter4 = `ALTER TABLE authors
+      MODIFY authorID int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;`;
+      let alter5 = `ALTER TABLE books
+      MODIFY bookID int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;`;
+      let alter6 = `ALTER TABLE messages
+      MODIFY msgID int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;`;
+      let alter7 = `ALTER TABLE books
+      ADD CONSTRAINT books_ibfk_1 FOREIGN KEY (authorID) REFERENCES authors (authorID);`;
+      let alter8 = `ALTER TABLE messages
+      ADD CONSTRAINT messages_ibfk_1 FOREIGN KEY (bookID) REFERENCES books (bookID);`;
+     
+
+       let query = sqldb.query(`${authors} ${books} ${messages} ${alter1} ${alter2} ${alter3} ${alter4} ${alter5} ${alter6} ${alter7} ${alter8}`, (err,res)=>{
+         if(err) reject(err);
+         console.log("stuff created");
+         resolve(res);
+       })
+     })
+
    }
 
 

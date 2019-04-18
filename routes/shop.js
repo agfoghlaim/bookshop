@@ -56,12 +56,11 @@ router.get('/addsqlbook/:id', (req,res)=>{
     if(theBook[0].forSale === true || theBook[0].forSale === "true"){
       req.flash("error_msg", `${theBook[0].title} is already for sale!` );
       res.redirect('/dashboard');
-      return;
+      //return;
     }
 
      //details to save in sql db
     let bookToAdd = {
-      isbn: '',
       bookTitle: theBook[0].title,
       bookImage: '',
       bookDescription: theBook[0].description,
@@ -225,7 +224,7 @@ router.get('/',(req,res)=>{
 
 router.get('/sqleditbook/', (req,res)=>{
   //console.log(req.query.bookupdates);
-
+console.log("in sql edit book")
   //req from editjsonbook in index.js
     const {title, author, description, price, userReview, condition,shopID,imageurl }= JSON.parse(req.query.bookupdates);
     
@@ -361,7 +360,17 @@ router.get('/checkMessages', (req,res)=>{
 //redirect to sql edit route
 res.redirect('/dashboard/?messages=' + string);
   })
-})
+});
+
+//uncomment and visit /shop/exactDump to set up the database
+
+// router.get('/exactDump', (req,res)=>{
+//   const theDB = helpers.exactDump(sqldb);
+//   theDB.then(resp=>{
+//     console.log("from route: ", resp);
+//     res.send('ok');
+//   }).catch(err => console.log("Error is: ", err))
+// })
 
 
 module.exports = router;
