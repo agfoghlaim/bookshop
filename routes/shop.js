@@ -364,13 +364,13 @@ res.redirect('/dashboard/?messages=' + string);
 
 //uncomment and visit /shop/exactDump to set up the database
 
-// router.get('/exactDump', (req,res)=>{
-//   const theDB = helpers.exactDump(sqldb);
-//   theDB.then(resp=>{
-//     console.log("from route: ", resp);
-//     res.send('ok');
-//   }).catch(err => console.log("Error is: ", err))
-// })
+router.get('/exactDump', (req,res)=>{
+  const theDB = helpers.exactDump(sqldb);
+  theDB.then(resp=>{
+    console.log("from route: ", resp);
+    res.send('ok');
+  }).catch(err => console.log("Error is: ", err))
+})
 
 
 module.exports = router;
