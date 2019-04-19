@@ -13,8 +13,16 @@ body{
   width:20vw;
 
 }
+
+#shop-books{
+  /* background: black; */
+  margin: 2em 0;
+  padding: 2em 0;
+}
 .shop-book-item{
-  background: pink;
+  background: linear-gradient(#febe10a8,#febe10);
+  padding:1em;
+  margin: 1em 0;
 }
 
 /* image thumbnail size */
@@ -306,10 +314,14 @@ Dashboard Messages
 .dashboard-message-head{
   text-align: center;
   background: linear-gradient(#fec427bd,#ffc62bcc);
-  padding: 0.5em;
-  margin: 0 3em 0 3em;
-  width: 60%;
+  /* padding: 0.5em;
+  margin: 0 3em 0 3em; */
+  /* width: 60%; */
 
+}
+
+.dashboard-main-container{
+  margin: 3em 0;
 }
 
 /* 
@@ -352,4 +364,22 @@ shop page
 }
 .home-info-row{
   margin: 1em 0;
+}
+
+
+/* contact form */
+.contactForm{
+  background: linear-gradient(#1ba455,#1ba45594);
+  padding: 2em;
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+}
+
+.contact-form-group, .contact-form-container{
+  margin:2em 0;
+}
+
+.btn{
+  border-radius: 0 !important;
 }

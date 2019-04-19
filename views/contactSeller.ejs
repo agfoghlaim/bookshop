@@ -1,29 +1,63 @@
-<h1>contact seller</h1>
+
+<!-- for some reason, css and js isn't loading properly for this view
+here is a quick fix for the css, this view doesn't need js -->
+<link rel="stylesheet" href="/style.css">
+
+
+<div class="page-heading">
+    <h1 class="text-center"><span class="book-cursive ">Contact Seller</span> </h1>
+    <p class="text-center">
+      
+      </p>
+</div>
+<div class="container" >
+    <% include ./partials/messages %>
+  </div>
 <p id="form-details"></p>
 
 <% result.forEach(function(r){ %>
-  <p>BookID: <%= r.bookID %></p>
+  <!-- <p>BookID: <%= r.bookID %></p>
   <p>SentID: <%= user.id %>  </p>
   <p>ForID: <%= r.userID %> </p>
-  <p>Re: <%= r.bookTitle %> by <%= r.authorName %> </p>
-
-<form action="/shop/contactSeller" method="post">
+  <p>Re: <%= r.bookTitle %> by <%= r.authorName %> </p> -->
+<div class="container contact-form-container">
+<form action="/shop/contactSeller" method="post" id="contactForm" class="contactForm">
  
   <!-- hidden fields for bookID, sentID, forID -->
   <input type="text" style="display:none" name="bookID" value="<%= r.bookID %>">
   <input type="text" style="display:none" name="sentID" value="<%= user.id %>">
   <input type="text" style="display:none" name="forID" value="<%= r.userID %>">
 
-  <div class="form-group">
-    <label for="msg">Message</label>
-    <textarea name="theMsg" id="" cols="30" rows="10"></textarea>
-</div>
+  
+ 
 
+  <div class="form-group contact-form-group">
+      <label for="sentName">
+        <h6 class="book-cursive text-center text-white">Name</h6>
+      </label><br>
+      <p class="text-center">
+          <input type="text"  name="sentName" value="<%= user.name %>" disabled>
+      </p>
+  </div>
 
+  <div class="form-group contact-form-group">
+      <label for="sentName"><h6 class="book-cursive text-center text-white">Re:</h6></label><br>
+      <input type="text"  name="bookTitle" value="<%= r.bookTitle %>" disabled>
+  </div>
 
-
-
-  <button type="subimt">Send</button>
+  <div class="form-group contact-form-group">
+    <label for="msg"><h6 class="book-cursive text-center text-white">Message</h6></label><br>
+    <textarea 
+    name="theMsg" 
+    id="" 
+    cols="30" 
+    rows="10"></textarea>
+  
+  </div>
+  <p class="text-muted"> Don't forget to include contact details or the Seller won't be able to respond!</p>
+<button type="subimt" class="btn btn-primary">Send</button>
 </form>
+
+</div>
 
 <% }) %>

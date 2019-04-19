@@ -409,7 +409,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
           
                 //write the file....
                  let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
-                 console.log("title and req.params.title", title, req.params.title);
+                 //console.log("title and req.params.title", title, req.params.title);
                  theBook.title = title;
                  theBook.author = author; 
                  theBook.description = description;

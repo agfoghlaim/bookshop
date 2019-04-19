@@ -58,7 +58,7 @@ router.get('/addsqlbook/:id', (req,res)=>{
 
       //no need to continue if book is already for sale
        return res.redirect('/dashboard');
-      //return;
+    
     }
 
      //details to save in sql db
@@ -94,7 +94,7 @@ router.get('/addsqlbook/:id', (req,res)=>{
               let newBook = helpers.sellBook(bookToAdd, sqldb);
               newBook
               .then(result => {
-                console.log("book saved, will update forsale field in json,need to the the sql id here")
+                //console.log("book saved, will update forsale field in json,need to the the sql id here")
                 //to update, can i send a request to here??
                 ///editJsonBook/:id
                 //use result.insertId
@@ -112,7 +112,7 @@ router.get('/addsqlbook/:id', (req,res)=>{
         bookToAdd.authorID = a.authorID;
         
         //THEN save the book 
-        console.log("book sent for selling (author saved already)", bookToAdd)
+       // console.log("book sent for selling (author saved already)", bookToAdd)
         let newBook = helpers.sellBook(bookToAdd, sqldb);
         newBook
         .then(result => {
@@ -163,18 +163,7 @@ router.get('/removesqlbook/:id', (req,res)=>{
       res.redirect('/shop/sqlallusersbooks')
   })
 })
-  
-    //!!!!!
-    //!!!
-    //update json to not for sale
-    //client side will have to call this route after it recieves this response!!
-
-    //redirect to get all books (front end fetch expects array of books which will eventually be sent from /sqlaluserbooks)
-
-    //res.send(result)
-  
     
-  
 })
 
 
@@ -186,7 +175,6 @@ router.get('/removesqlbook/:id', (req,res)=>{
 
 router.get('/sqlallusersbooks',(req,res)=>{
 
-  // let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = "${req.user.id}"`;
   let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = ?`;
 
   let query = sqldb.query(sql, req.user.id, (err,result)=>{
@@ -205,7 +193,7 @@ router.post('/editsqlbook/:id',(req,res)=>{
 
 //=============================================================
 
-//get all  books from sql db (books for sale)
+//get all books from sql db (books for sale)
 
 //=============================================================
 
@@ -229,19 +217,14 @@ router.get('/',(req,res)=>{
 //===========================================
 
 router.get('/sqleditbook/', (req,res)=>{
-  //console.log(req.query.bookupdates);
-console.log("in sql edit book")
-  //req from editjsonbook in index.js
-    const {title, author, description, price, userReview, condition,shopID,imageurl }= JSON.parse(req.query.bookupdates);
-    
-  
-  //need to do the sql update
-  //then redirect? 
-  let sqlauthor = `UPDATE authors SET authorName="${author}" WHERE authorID = (SELECT authorID FROM books WHERE bookID=${shopID})`;
+ 
+  const {title, author, description, price, userReview, condition,shopID,imageurl }= JSON.parse(req.query.bookupdates);
+ console.log("Price: ", price)
+  let sqlauthor = `UPDATE authors SET authorName="?" WHERE authorID = (SELECT authorID FROM books WHERE bookID=?)`;
 
-  let sqlbook = `UPDATE books SET bookTitle="${title}", bookDescription="${description}", bookPrice="${price}", userReview="${userReview}", userBookImage="${imageurl}", bookCondition="${condition}" WHERE bookID=${shopID}`;
+  let sqlbook = `UPDATE books SET bookTitle="?", bookDescription="?", bookPrice="?", userReview="?", userBookImage="?", bookCondition="?" WHERE bookID=?`;
 
-  let bothQueries= sqldb.query(`${sqlauthor}; ${sqlbook}`, (err,result,fields)=>{
+  let bothQueries= sqldb.query(`${sqlauthor}; ${sqlbook}`, [author,shopID,title,description, parseInt(price), userReview, imageurl, condition, shopID], (err,result,fields)=>{
     if(err){
       console.log(err); 
       //throw err;
@@ -256,26 +239,6 @@ console.log("in sql edit book")
   
 })
 
-// router.get('/contactSeller/:sellerID/:userID/:bookID', (req,res)=>{
- 
-//   //if user is not logged in redirect to login
-//   if(!req.params.userID){
-//     res.redirect('/users/login');
-//   }else{
-//     //first get details about the book to prepopulate the form
-//     http.get(`http://localhost:5000/shop/query/${req.params.bookID}`, (resp)=>{
-//       console.log(resp)
-//       return resp;
-//     }).on('end',()=>{
-//       console.log("here");
-//       resp.end();
-//     })
-
-
-//     res.render('contactSeller');
-//   }
-  
-// })
 /*
 Render contact seller form
 */
@@ -325,28 +288,46 @@ Deal with contact seller form
 
 */
 router.post('/contactSeller', (req,res)=>{
-  //console.log(req.body.message)
-  //save the message somewhere
+  
   //need the theMsg, bookID, sentID, forID, 
-  const {theMsg, sentID, forID, bookID } = req.body;
-  const messageDets = {theMsg, sentID, forID, bookID}
-  console.log(theMsg, sentID, forID, bookID);
+  const {theMsg, sentID, forID, bookID, bookTitle, sentName} = req.body;
+ 
+  const messageDets = {theMsg, sentID, forID, bookID, bookTitle, sentName}
+  
   const saveMessage = helpers.saveMessage(messageDets, sqldb);
   saveMessage
   .then(result=>{
-    console.log("result", result)
     req.flash("success_msg", `Message sent.` );
     res.redirect('/shop/checkMessages')
-  })
+  }).catch(err => console.log("Save Msg Error: ", err))
 })
 
+router.get('/deleteMsg/:msgid', (req,res)=>{
+  let sql = "DELETE from messages where msgID = ?";
+   // console.log(book)
+   let query = sqldb.query(sql, req.params.msgid, (err,result)=>{
+    if(err){
+      console.log("error deleting msg: ", err);
+      req.flash("error_msg", `Error deleting message.` );
+      res.redirect('/dashboard');
+    }else{
+      // if(!res.insertId){
+      //   console.log("no insert id !! \n\n\n\n\n", res)
+      // }
+     console.log("msg deleted");
+     req.flash("success_msg", `Message deleted.` );
+     res.redirect('/dashboard');
+    }
+  })
+
+})
 
 /*
 
 CHECK FOR MESSAGES
 
 when users login, they will redirect here
-check if they have messages
+check if they have messages then
 redirect them to the dashboard
 */
 router.get('/checkMessages', (req,res)=>{
@@ -364,6 +345,7 @@ router.get('/checkMessages', (req,res)=>{
    const string = encodeURIComponent(JSON.stringify(result));
   
 //redirect to sql edit route
+
 res.redirect('/dashboard/?messages=' + string);
   })
 });
@@ -376,6 +358,19 @@ res.redirect('/dashboard/?messages=' + string);
 //     console.log("from route: ", resp);
 //     res.send('ok');
 //   }).catch(err => console.log("Error is: ", err))
+// })
+
+//uncomment to add column to msg table
+// router.get('/addcoltomsg', (req,res)=>{
+//   let sql = "ALTER TABLE messages ADD sentName varchar(255);";
+//   let sql2 = "ALTER TABLE messages ADD bookTitle varchar(255);";
+//   let query = sqldb.query(`${sql} ${sql2} `, (err,result)=>{
+//     if(err){
+//       console.log("ERR", err)
+//     }
+//     console.log("stuff created");
+//     console.log("went well..." , result)
+//   })
 // })
 
 

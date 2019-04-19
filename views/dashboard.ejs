@@ -6,21 +6,36 @@
 </div>
 <p>Welcome <%= user.name %></p>
 <% include ./partials/messages %>
-
+<a href="/shop/checkMessages" class="btn btn-info btn-sm">check messages</a>
 <% if(typeof userMessages != 'undefined'){ %>
-  <h5>You have <%= userMessages.length %> messages.</h5>
-  
+  <h5>Messages (<%= userMessages.length %>):</h5>
 
+<div class="row msg-row">
+  <div class="col col-12-md">
   <% userMessages.forEach(function(b,i){ %>
+    <div class="card text-center">
+      <div class="card-header dashboard-message-head">
+          From: <%= b.sentName %> 
+       
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Re: <%= b.bookTitle %></h5>
+        <p class="card-text"><%= b.theMsg %></p>
+        <a href="/shop/deleteMsg/<%=b.msgID %>" class="btn btn-danger btn-sm">Delete</a>
+      </div>
+      <div class="card-footer text-muted">
+           <small>Sent on <%= b.msgWhen.substr(0,10) %>
+            at <%= b.msgWhen.substr(11,5) %></small>
+      </div>
+    </div>
+
    
-    <p class="dashboard-message-head"><%= i+1 %>. <small>Sent on <%= b.msgWhen.substr(0,10) %>
-    at <%= b.msgWhen.substr(11,5) %></small></p>
-    
-    <p class="dashboard-message"><%= b.theMsg %></p>
     <% }) %>
+  </div>
+</div>
   <% } %>
 
-<div class="container">
+<div class="container dashboard-main-container">
   <div class="row">
 
     <!-- all books by this user (from json) -->
@@ -55,8 +70,8 @@
     <div class="col-md-6">
       
       <h2>Your Books for sale</h2>
-      <p>add here from sql db</p>
-      <button id="getallbooks">Show my Books for Sale</button>
+     
+      <button id="getallbooks" class="btn btn-sm btn-info">Show my Books for Sale</button>
 
       <div class="col" id="shop-books">
      
