@@ -17,9 +17,9 @@ module.exports = {
   },
   isAuthorAlreadySaved: function(theBook,sqldb){
    return new Promise((resolve,reject)=>{
-    let sql = 'SELECT * from authors WHERE authorName = "'+theBook[0].author+'";'
-    
-    let query = sqldb.query(sql, (err, res) =>{
+    //let sql = 'SELECT * from authors WHERE authorName = "'+theBook[0].author+'";'
+    let sql = 'SELECT * from authors WHERE authorName = ?';
+    let query = sqldb.query(sql, theBook[0].author, (err, res) =>{
       if(err) reject('err');
       //console.log("res is ", res)
       if(!res.length){

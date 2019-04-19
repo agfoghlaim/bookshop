@@ -55,7 +55,9 @@ router.get('/addsqlbook/:id', (req,res)=>{
     //is book already for sale?
     if(theBook[0].forSale === true || theBook[0].forSale === "true"){
       req.flash("error_msg", `${theBook[0].title} is already for sale!` );
-      res.redirect('/dashboard');
+
+      //no need to continue if book is already for sale
+       return res.redirect('/dashboard');
       //return;
     }
 
@@ -144,7 +146,7 @@ router.get('/removesqlbook/:id', (req,res)=>{
   console.log("deleting sql book with id ", req.params.id)
 
   let bookid = parseInt(req.params.id)
-  let sql = `DELETE FROM books WHERE bookID = ${bookid};`;
+  let sql = `DELETE FROM books WHERE bookID = ?`;
 
   let deleteAssocMsgs = helpers.deleteAssocMsgs(bookid,sqldb);
   deleteAssocMsgs
@@ -155,7 +157,7 @@ router.get('/removesqlbook/:id', (req,res)=>{
   .then(()=>{
     //now removing the book from the shop
     console.log("now removing the book from the shop")
-    let query = sqldb.query(sql, (err,result)=>{
+    let query = sqldb.query(sql,bookid, (err,result)=>{
       if(err) throw err;
       console.log("now redirecting to get all your books")
       res.redirect('/shop/sqlallusersbooks')
@@ -366,15 +368,15 @@ res.redirect('/dashboard/?messages=' + string);
   })
 });
 
-//uncomment and visit /shop/exactDump to set up the database
+//uncomment below (and uncomment helpers.exactDump()) and visit /shop/exactDump to set up the database
 
-router.get('/exactDump', (req,res)=>{
-  const theDB = helpers.exactDump(sqldb);
-  theDB.then(resp=>{
-    console.log("from route: ", resp);
-    res.send('ok');
-  }).catch(err => console.log("Error is: ", err))
-})
+// router.get('/exactDump', (req,res)=>{
+//   const theDB = helpers.exactDump(sqldb);
+//   theDB.then(resp=>{
+//     console.log("from route: ", resp);
+//     res.send('ok');
+//   }).catch(err => console.log("Error is: ", err))
+// })
 
 
 module.exports = router;

@@ -274,7 +274,7 @@ function validateForm(e){
 //listen for changes to the editBookForm
 //show error messages as the user fills in the form
 //e.tartet.validationMessage defaults to '' for no error
-console.log(typeof(editBookForm))
+
 
 if(typeof editBookForm !== 'undefined'){
   editBookForm.addEventListener('change',function(e){
@@ -292,7 +292,10 @@ Add book form
 
 //listen to the save button
 const submitAddBtn = document.getElementById('submit-add-btn');
-submitAddBtn.addEventListener('click', function(e){validateAddForm(e)} );
+if(submitAddBtn){
+  submitAddBtn.addEventListener('click', function(e){validateAddForm(e)} );
+}
+
 
 //validate function for editBook Form
 function validateAddForm(e){
@@ -326,11 +329,13 @@ function validateAddForm(e){
 //listen for changes to the addBookForm
 //show error messages as the user fills in the form
 //e.tartet.validationMessage defaults to '' for no error
-console.log("listening...")
-addBookForm.addEventListener('change',function(e){
-  console.log("a chcange")
-  document.getElementById(`${e.target.name}-error`).textContent = e.target.validationMessage;
-})
+if(typeof addBookForm !== 'undefined'){
+  addBookForm.addEventListener('change',function(e){
+    console.log("a chcange")
+    document.getElementById(`${e.target.name}-error`).textContent = e.target.validationMessage;
+  })
+}
+
  
  
 
