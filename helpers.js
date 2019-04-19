@@ -61,6 +61,9 @@ module.exports = {
         if(err){
           reject(err)
         }else{
+          if(!res.insertId){
+            console.log("no insert id !! \n\n\n\n\n", res)
+          }
           resolve(res)
         }
       })
@@ -179,49 +182,51 @@ module.exports = {
     })
    },
 
-   createTheDb: function(sqldb){
-     return new Promise((resolve,reject)=>{
-      //let createDB = `CREATE DATABASE pretendbookshop;`;
-      let use = `use pretendbookshop;`;
-       let authors = `CREATE TABLE authors (
-        authorID int(11) NOT NULL,
-        authorName varchar(255) NOT NULL,
-        PRIMARY KEY (authorID)
-      );`;
-       let books = `CREATE TABLE books (
-        bookID int(11) NOT NULL,
-        bookTitle varchar(255) NOT NULL,
-        bookImage varchar(255) DEFAULT NULL,
-        bookDescription text,
-        userID varchar(255) NOT NULL,
-        bookPrice int(11) NOT NULL,
-        authorID int(11),
-        userReview text NOT NULL,
-        userBookImage varchar(255) DEFAULT NULL,
-        bookCondition varchar(255) NOT NULL,
-        bookJsonID int(11) DEFAULT NULL,
-        PRIMARY KEY (bookID),
-        FOREIGN KEY (authorID) REFERENCES authors(authorID)
-      );`;
+  //  createTheDb: function(sqldb){
+  //    return new Promise((resolve,reject)=>{
+  //     //let createDB = `CREATE DATABASE pretendbookshop;`;
+  //     let use = `use pretendbookshop;`;
+  //      let authors = `CREATE TABLE authors (
+  //       authorID int(11) NOT NULL,
+  //       authorName varchar(255) NOT NULL,
+  //       PRIMARY KEY (authorID)
+  //     );`;
+  //      let books = `CREATE TABLE books (
+  //       bookID int(11) NOT NULL,
+  //       bookTitle varchar(255) NOT NULL,
+  //       bookImage varchar(255) DEFAULT NULL,
+  //       bookDescription text,
+  //       userID varchar(255) NOT NULL,
+  //       bookPrice int(11) NOT NULL,
+  //       authorID int(11),
+  //       userReview text NOT NULL,
+  //       userBookImage varchar(255) DEFAULT NULL,
+  //       bookCondition varchar(255) NOT NULL,
+  //       bookJsonID int(11) DEFAULT NULL,
+  //       PRIMARY KEY (bookID),
+  //       FOREIGN KEY (authorID) REFERENCES authors(authorID)
+  //     );`;
 
-      let messages = `CREATE TABLE messages (
-        msgID int(11) NOT NULL,
-        bookID int(11) DEFAULT NULL,
-        sentID varchar(255) NOT NULL,
-        forID varchar(255) NOT NULL,
-        theMsg text NOT NULL,
-        msgWhen datetime DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (msgID)
-      );`;
+  //     let messages = `CREATE TABLE messages (
+  //       msgID int(11) NOT NULL,
+  //       bookID int(11) DEFAULT NULL,
+  //       sentID varchar(255) NOT NULL,
+  //       forID varchar(255) NOT NULL,
+  //       theMsg text NOT NULL,
+  //       msgWhen datetime DEFAULT CURRENT_TIMESTAMP,
+  //       PRIMARY KEY (msgID)
+  //     );`;
      
 
-       let query = sqldb.query(`${authors} ${books} ${messages}`, (err,res)=>{
-         if(err) reject(err);
-         console.log("authors created");
-         resolve(res);
-       })
-     })
-   },
+  //      let query = sqldb.query(`${authors} ${books} ${messages}`, (err,res)=>{
+  //        if(err) reject(err);
+  //        console.log("authors created");
+  //        resolve(res);
+  //      })
+  //    })
+  //  },
+
+   //to create the database tables on initial setup
    exactDump: function(sqldb){
     return new Promise((resolve,reject)=>{
       //let createDB = `CREATE DATABASE pretendbookshop;`;

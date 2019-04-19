@@ -88,6 +88,7 @@ router.get('/addsqlbook/:id', (req,res)=>{
         })
         .then(()=>{
               //THEN save the book 
+              console.log("book being sent for sale ", bookToAdd)
               let newBook = helpers.sellBook(bookToAdd, sqldb);
               newBook
               .then(result => {
@@ -95,8 +96,8 @@ router.get('/addsqlbook/:id', (req,res)=>{
                 //to update, can i send a request to here??
                 ///editJsonBook/:id
                 //use result.insertId
-                console.log("do i have insert id??? ", result.insertID)
-                res.redirect(`/editJsonBook/${req.params.id}/${result.insertID}/forSale/true`)
+                console.log("do i have insert id??? ", result.insertId)
+                res.redirect(`/editJsonBook/${req.params.id}/${result.insertId}/forSale/true`)
                 
               })
               .catch(err => console.log("error saving the book:", err))
@@ -109,6 +110,7 @@ router.get('/addsqlbook/:id', (req,res)=>{
         bookToAdd.authorID = a.authorID;
         
         //THEN save the book 
+        console.log("book sent for selling (author saved already)", bookToAdd)
         let newBook = helpers.sellBook(bookToAdd, sqldb);
         newBook
         .then(result => {

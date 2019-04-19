@@ -428,6 +428,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
                      
                    writeFile.then(theBook=>{
                        //check if book is for sale (ie. in sqldb)
+                       console.log("Check the book here...", theBook)
                        if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
                          //need to update book in db too!!
                          console.log("book is for sale, will update sql")
@@ -471,6 +472,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
     
          
              writeFile.then(theBook=>{
+              console.log("Check the book here 2...", theBook)
                  //if in sqldb
                  if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
                    //update sql
