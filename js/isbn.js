@@ -139,7 +139,6 @@ function doProgress(step){
  
   const progress = document.getElementById('progress');
   const width = (step * 10)*2; 
-  //console.log("doing progress", width)
   progress.setAttribute('style', `width:${width}%;`);
 }
 
@@ -153,10 +152,7 @@ function doProgress(step){
 function populateForm(book){
   document.getElementById('title').value = book.volumeInfo.title;
   document.getElementById('author').value = book.volumeInfo.authors[0];
-
-    document.getElementById('thumb').src = book.volumeInfo.imageLinks.smallThumbnail;
- 
- 
+  document.getElementById('thumb').src = book.volumeInfo.imageLinks.smallThumbnail;
   document.getElementById('description').value = book.volumeInfo.description;
   document.getElementById('imageurl').value = book.volumeInfo.imageLinks.smallThumbnail;
 }

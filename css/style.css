@@ -335,10 +335,17 @@ shop page
   background: linear-gradient(#1ba455,#1ba45594);
   margin: 1em 0;
   padding:2em;
+  box-shadow: 3px 3px 5px 6px #ccc;
 }
+
+
 
 .shop-item h6, .shop-item h5{
   color: var(--light);
+}
+
+.shop-item h5{
+  font-size: 2em;
 }
 /* .shop-item h5{
   font-family: 'Pacifico', cursive;
@@ -374,6 +381,7 @@ shop page
   display: grid;
   justify-content: center;
   justify-items: center;
+  box-shadow: 3px 3px 5px 6px #ccc;
 }
 
 .contact-form-group, .contact-form-container{

@@ -15,7 +15,7 @@
       
         <!-- <img src="/img-<%= b.bookJsonID %>.jpg" alt=""> -->
         <!-- <p>Image from sql db:<%= b.userBookImage%></p> -->
-        <img src="<%= b.userBookImage%>" alt="" class="thumbnail-size-img">
+        <img src="<%= b.userBookImage.replace(/['"]+/g, '') %>" alt="" class="thumbnail-size-img">
         
         <!-- <img src="/default-img.PNG" alt=""> -->
       
