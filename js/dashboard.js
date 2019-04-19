@@ -193,7 +193,7 @@ function deleteSqlBook(e){
   console.log("delete ", e)
   //first make sure the target is the delete button
   if(e.target.id.substring(0,10) != 'removeFrom'){
-    console.log("not the button",e.target.id.substring(0,9))
+   // console.log("not the button",e.target.id.substring(0,9))
     return;
   }
   console.log("listening to this, will delete", e.target.dataset.bookid)
@@ -208,7 +208,13 @@ function deleteSqlBook(e){
   })
   .then(()=>{
     //need json id not sqlid!! 
-    let theURL = `/editJsonBook/${e.target.dataset.bookjsonid}/${e.target.dataset.bookid}/forSale/false`;
+
+    /*
+    NOTE
+    here when req is sent to /editJsonBook, send null as second paramater :shopid, at this point the book has been removed and want to set the json shopid to null
+    */
+    // let theURL = `/editJsonBook/${e.target.dataset.bookjsonid}/${e.target.dataset.bookid}/forSale/false`;
+    let theURL = `/editJsonBook/${e.target.dataset.bookjsonid}/null/forSale/false`;
     
     //req editJsonBook (index.js) which will set json 'forSale' field to false
     fetch(theURL)

@@ -503,7 +503,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
 //changes condition of book with id 49 to 'mediocre'
 //=====================================================
 router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
- 
+ console.log("The params to editJSon book ", req.params)
   const idToFind = parseInt(req.params.id);
   const latestBooks = helpers.getLatestBooks();
   latestBooks.then(books =>{

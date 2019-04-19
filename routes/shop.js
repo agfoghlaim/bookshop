@@ -184,8 +184,10 @@ router.get('/removesqlbook/:id', (req,res)=>{
 
 router.get('/sqlallusersbooks',(req,res)=>{
 
-  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = "${req.user.id}"`;
-  let query = sqldb.query(sql, (err,result)=>{
+  // let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = "${req.user.id}"`;
+  let sql = `SELECT books.bookTitle,books.bookPrice,books.bookID,books.bookDescription,books.bookJsonId, books.userBookImage, authors.authorID,authors.authorName from books, authors WHERE books.authorID = authors.authorID AND books.userID = ?`;
+
+  let query = sqldb.query(sql, req.user.id, (err,result)=>{
     if(err) throw err;
 
     //just send, client will deal with it
