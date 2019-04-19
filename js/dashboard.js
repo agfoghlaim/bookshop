@@ -10,9 +10,12 @@
 // }
 //delete a json book()
 const booksColumn = document.getElementById('dashboard-json-col');
-booksColumn.addEventListener('click', function(e){
-  deleteBook(e);
-})
+if(booksColumn){
+  booksColumn.addEventListener('click', function(e){
+    deleteBook(e);
+  })
+}
+
 
 /*
 //req to /deletebookclient

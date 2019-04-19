@@ -30,7 +30,8 @@
             <form action="/addBook" 
             method="post" 
             accept-charset="UTF-8" 
-            encType="multipart/form-data">
+            encType="multipart/form-data"
+            name="addBookForm">
 
                 <!-- will show the api image -->
                 <div class="step step-1 col hide" id="step-1">
@@ -64,6 +65,8 @@
                         <div class="form-group hide" id="img-uploader">
                                 <label for="uploadImg">Upload Image</label><br>
                                 <input type="file" class="form-control-file" name="uploadImg" id="">
+                                
+                                <p id="uploadImg-error"></p>
                         </div>
                     </div>
 
@@ -88,10 +91,14 @@
                     <div class="form-group">
                         <label for="title">Title</label><br>
                         <input type="text" id="title" name="title" value="" required>
+                        
+                      <p id="title-error"></p>
                     </div>
                     <div class="form-group">
                         <label for="author">Author</label><br>
                         <input type="text" name="author" id="author" value="" required>
+                        
+                      <p id="author-error"></p>
                     </div>
 
                     <p class="text-center">
@@ -107,7 +114,9 @@
                     <h3 class="book-cursive">Description</h3>
                     <div class="form-group">
                       
-                        <textarea class="form-control" rows="10" type="textarea" cols="100" name="description" id="description" value="" required></textarea>
+                        <textarea class="form-control" rows="10" type="textarea" cols="100" name="description" id="description" value="" required minlength="2" maxlength="5000"></textarea>
+                        
+                      <p id="description-error"></p>
                     </div>
 
                     <p class="text-center">
@@ -124,7 +133,9 @@
                     <h3 class="book-cursive" >Review</h3>
                     <div class="form-group">
                         <label for="userReview"></label><br>
-                        <textarea class="form-control" rows="10" type="textarea" cols="100" name="userReview" id="userReview" value="" required></textarea>
+                        <textarea class="form-control" rows="10" type="textarea" cols="100" name="userReview" id="userReview" minlength="2" maxlength="5000" value="" required></textarea>
+                        
+                      <p id="userReview-error"></p>
                     </div>
 
                     <p class="text-center">
@@ -140,24 +151,31 @@
 
                     <div class="form-group">
                         <label for="condition">Condition:</label><br>
-                        <select class="form-control"  name="condition" id="condition" value="">
+                        <select class="form-control"  name="condition" id="condition" value="" required>
                             <option value="good">Good</option>
                             <option value="bad">Bad</option>
                             
                         </select>
+                        
+                      <p id="condition-error"></p>
                     </div>
 
 
                     <div class="form-group">
                         <label for="price">Price:</label><br>
-                        <input class="form-control" rows="15" type="text" name="price" id="price" value="" required>
+                        <input class="form-control" rows="15" type="number" name="price" id="price" min="0" 
+                        max="100000" value="" required>
+                        
+                      <p id="price-error"></p>
                     </div>
 
                     <p class="text-center">
                     <button class="btn btn-prev prevNextBtn" data-backto="4" id=""><i class="fas fa-long-arrow-alt-left fa-3x"></i></button>
 
                     <!-- the submit form btn -->
-                    <input type="submit" value="Save">
+                    <input type="submit" id="submit-add-btn" value="Save">
+                    <p class="add-form-error hide" id="add-form-error">It looks like you missed something, please go back and fix.</p>
+            </p>
                 </p>
                 </div>
         

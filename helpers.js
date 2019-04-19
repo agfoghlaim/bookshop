@@ -61,9 +61,9 @@ module.exports = {
         if(err){
           reject(err)
         }else{
-          if(!res.insertId){
-            console.log("no insert id !! \n\n\n\n\n", res)
-          }
+          // if(!res.insertId){
+          //   console.log("no insert id !! \n\n\n\n\n", res)
+          // }
           resolve(res)
         }
       })

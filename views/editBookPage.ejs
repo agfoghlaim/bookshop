@@ -32,12 +32,14 @@
                   <div class="form-group">
                       <h3 class="book-cursive">Title</h3>
                       <label for="comment"></label><br>
-                      <input type="text" id="title" name="title" value="<%= b.title %>">
+                      <input type="text" id="title" name="title" value="<%= b.title %>" required  >
+                      <p id="title-error"></p>
                   </div><br>
                   <div class="form-group">
                       <h3 class="book-cursive">Author</h3>
                       <label for="comment"></label><br>
-                      <input type="text" name="author" id="author" value="<%= b.author %>">
+                      <input type="text" name="author" id="author" value="<%= b.author %>" required>
+                      <p id="author-error"></p>
                   </div>
                   <p class="text-center editArrows">  
                   <button type="button" class="prevNextBtn btn btn-next" data-forwardto="1" id="">
@@ -121,7 +123,8 @@
                   <div class="form-group">
                     <h3 class="book-cursive">Description</h3>
                     <label for="comment"></label><br>
-                    <textarea class="form-control" rows="10" cols="100" type="textarea" name="description" id="description" value="<%= b.description %>"><%= b.description %></textarea>
+                    <textarea class="form-control" rows="10" cols="100" type="textarea" name="description" id="description" value="<%= b.description %>" required minlength="2" maxlength="5000"><%= b.description %></textarea>
+                    <p id="description-error"></p>
                   </div>
 
                 <p class="text-center editArrows">
@@ -139,7 +142,8 @@
                 <div class="form-group">
                     <h3 class="book-cursive">Review</h3>
                   <label for="userReview"></label><br>
-                  <textarea class="form-control" rows="10" cols="100" type="textarea" name="userReview" id="userReview" value="<%= b.userReview %>"><%= b.userReview %></textarea>
+                  <textarea class="form-control" rows="10" cols="100" type="textarea" name="userReview" id="userReview" value="<%= b.userReview %>" minlength="2" maxlength="5000" required><%= b.userReview %></textarea>
+                  <p id="userReview-error"></p>
                 </div>
 
                 <p class="text-center editArrows">
@@ -159,7 +163,7 @@
 
                 <div class="form-group">
                     <label for="condition"><h3 class="book-cursive">Condition</h3></label><br>
-                    <select class="form-control"  name="condition" id="condition" value="<%= b.condition %>">
+                    <select class="form-control"  name="condition" id="condition" value="<%= b.condition %>" required>
                         <option value="good">Good</option>
                         <option value="bad">Bad</option>
                     </select>
@@ -174,7 +178,7 @@
          
             
               <input class="btn btn-secondary" id="submit-edit-btn" type="submit" value="Save">
-              <p class="edit-form-error hide" id="edit-form-error">It looks like you missed a field, please go back and fix.</p>
+              <p class="edit-form-error hide" id="edit-form-error">It looks like you missed something, please go back and fix.</p>
             </p>
             </div>
             </div>

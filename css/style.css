@@ -132,11 +132,20 @@ textarea.form-control {
   text-align: center;
  }
 
- input:invalid,textarea:invalid, input[type='file' i]:invalid {
-  
-    background-color: var(--red);
+input:invalid,textarea:invalid, input[type='file' i]:invalid {
+   background-color: var(--red);
     content: 'required field';
 }
+
+input:invalid:focus,textarea:invalid:focus, input[type='file' i]:invalid:focus {
+  
+   content: 'required field';
+}
+
+/* input:required:focus{
+  background: pink;
+  content: 'required'
+} */
 
 
 .progress{

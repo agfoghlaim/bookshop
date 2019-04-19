@@ -100,11 +100,9 @@ const nextBtns = document.querySelectorAll('.btn-next');
 nextBtns.forEach(b => b.addEventListener('click', function(e){goToNext(e)}))
 
 function goToNext(e){
+
+  //stop form submitting until client js says so
   e.preventDefault();
-  //do validation for the step in the form before coninuing to the next step
- 
-
-
 
   //console.log("e.target", e.target);
   let forwardTo = e.target.dataset.forwardto;
@@ -172,6 +170,7 @@ function populateForm(book){
 const ownImgConfirm = document.getElementById('ownImgConfirm');
 const radios = document.querySelector('.img-radios');
 if(radios){
+ 
   radios.addEventListener('change', function(e){
     const uploader = document.getElementById('img-uploader');
     const thumb = document.getElementById('thumb');
@@ -184,10 +183,14 @@ if(radios){
       
       uploader.classList.remove('hide')
       thumb.classList.add('hide')
+
+       //Also if they select to upload an image, add required to the upload file input
+       addBookForm.uploadImg.required = true;
       //hide default img
       //show upload file fields
     }else if(e.target.value = 'defaultImgConfirm'){
       //console.log("will hide upload", e.target.value)
+      addBookForm.uploadImg.required = false;
       uploader.classList.add('hide')
       thumb.classList.remove('hide')
     }
@@ -199,6 +202,8 @@ if(radios){
 
 //Edit Book Form
 const newImgConfirm = document.getElementById('newImgConfirm');
+
+//listen to radio buttons (add required to the input element if the user selects 'upload image')
 const editRadios = document.querySelector('.edit-img-radios');
 if(editRadios){
   editRadios.addEventListener('change', function(e){
@@ -231,21 +236,22 @@ if(editRadios){
 }
 
 
-//have to intercept the form submission so the form can be validated, otherwise the html5 validation will stop the form submitting (if there is an error) but the user won't know why
+//have to intercept the form submission so the form can be validated, otherwise the html5 validation will stop the form submitting (if there is an error) but because of the steps the user won't know why
 
 //listen to the save button
 const submitEditBtn = document.getElementById('submit-edit-btn');
-submitEditBtn.addEventListener('click', function(e){validateForm(e)} );
+if(submitEditBtn){
+  submitEditBtn.addEventListener('click', function(e){validateForm(e)} );
+}
 
 
+//validate function for editBook Form
 function validateForm(e){
   //stop submitting if called by save btn
   if(e){
     e.preventDefault();
   }
-  
-
-  //is the form valid?
+  //submit form if it's valid, else show on step 5 (current step) that they need to go back and address errors
   let editIsValid = editBookForm.checkValidity();
  
   if(editIsValid){
@@ -262,24 +268,83 @@ function validateForm(e){
       editFormError.classList.remove('show');
       editFormError.classList.add('hide');
     },5000);
-
-    
-
-
-    //go through form and show relevant errors
-    Array.from(editBookForm).forEach(i=>{
-      if(i.validationMessage){
-        console.log(i.name, " has error")
-        document.getElementById(`${i.name}-error`).textContent = i.validationMessage;
-      }else{
-      // console.log(i.name, "no error")
-      }
-    })
-
   }
-
-
 }
+
+//listen for changes to the editBookForm
+//show error messages as the user fills in the form
+//e.tartet.validationMessage defaults to '' for no error
+console.log(typeof(editBookForm))
+
+if(typeof editBookForm !== 'undefined'){
+  editBookForm.addEventListener('change',function(e){
+    document.getElementById(`${e.target.name}-error`).textContent = e.target.validationMessage;
+  })
+}
+
+
+
+/*
+Add book form
+*/
+
+//have to intercept the form submission so the form can be validated, otherwise the html5 validation will stop the form submitting (if there is an error) but because of the steps the user won't know why
+
+//listen to the save button
+const submitAddBtn = document.getElementById('submit-add-btn');
+submitAddBtn.addEventListener('click', function(e){validateAddForm(e)} );
+
+//validate function for editBook Form
+function validateAddForm(e){
+  //stop submitting if called by save btn
+  if(e){
+    e.preventDefault();
+  }
+  //submit form if it's valid, else show on step 5 (current step) that they need to go back and address errors
+  let addIsValid = addBookForm.checkValidity();
+ 
+  if(addIsValid){
+    //submit form
+    addBookForm.submit();
+  }else{
+        //show error info on step 5
+    const addFormError = document.getElementById('add-form-error');
+    addFormError.classList.remove('hide');
+    addFormError.classList.add('show');
+
+    //hide error infor on step 5 (after 5 seconds)
+    setTimeout(function(){
+      addFormError.classList.remove('show');
+      addFormError.classList.add('hide');
+    },5000);
+  }
+}
+
+
+
+
+//listen for changes to the addBookForm
+//show error messages as the user fills in the form
+//e.tartet.validationMessage defaults to '' for no error
+console.log("listening...")
+addBookForm.addEventListener('change',function(e){
+  console.log("a chcange")
+  document.getElementById(`${e.target.name}-error`).textContent = e.target.validationMessage;
+})
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
