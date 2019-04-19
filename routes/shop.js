@@ -361,17 +361,17 @@ res.redirect('/dashboard/?messages=' + string);
 // })
 
 //uncomment to add column to msg table
-// router.get('/addcoltomsg', (req,res)=>{
-//   let sql = "ALTER TABLE messages ADD sentName varchar(255);";
-//   let sql2 = "ALTER TABLE messages ADD bookTitle varchar(255);";
-//   let query = sqldb.query(`${sql} ${sql2} `, (err,result)=>{
-//     if(err){
-//       console.log("ERR", err)
-//     }
-//     console.log("stuff created");
-//     console.log("went well..." , result)
-//   })
-// })
+router.get('/addcoltomsg', (req,res)=>{
+  let sql = "ALTER TABLE messages ADD sentName varchar(255);";
+  let sql2 = "ALTER TABLE messages ADD bookTitle varchar(255);";
+  let query = sqldb.query(`${sql} ${sql2} `, (err,result)=>{
+    if(err){
+      console.log("ERR", err)
+    }
+    console.log("stuff created");
+    console.log("went well..." , result)
+  })
+})
 
 
 module.exports = router;
