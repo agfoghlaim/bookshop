@@ -3,6 +3,7 @@
 //This file contains routes for CRUDing books.json
 
 //==============================================
+
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
@@ -19,51 +20,24 @@ const fileUpload = require('express-fileupload');
 //fileUpload middleware (only need on json routes??)
 router.use(fileUpload());
 
-//====================================================
 
-//route to to save the googleapi book image
-
-//=====================================================
-// router.get('/saveimg/:url/:title', (req,res)=>{
-//   console.log("here")
-//     const url= req.params.url;
-//     const title = req.params.title;
-//   const file = fs.createWriteStream(`${title}.jpg`);
-//   const request = http.get(`url`, function(response) {
-//     response.pipe(file);
-//   });
-//   const {title, url}= JSON.parse(req.query.imagedetails);
-//   const string = encodeURIComponent(JSON.stringify(theBook));
-//   res.redirect('/shop/sqleditbook/?bookupdates=' + string);
-
-// })
-
-
-
-//get books data from json file
-// let books;
-// fs.readFile('./models/books.json', (err,data)=>{
-//   if(err) throw err;
-//   books = JSON.parse(data);
-// })
-
-// //watch for changes to the json file
-// books = helpers.watchBooks();
-
-//===================================================================
-
-//DASHBOARD ROUTES
-
-//===================================================================
 
 //=====================
+
   //GET all json books
+
 //=====================
 router.get('/', (req,res) => {
   res.render('home')}
 );
 
-//dashboard (when user signs in)
+
+//=====================
+
+ //dashboard (when user signs in)
+
+//=====================
+
 router.get('/dashboard', ensureAuthenticated, (req,res) => { 
   //checkMessages redirects here with a querystring called messages
   let userMessages ='';
@@ -91,40 +65,16 @@ router.get('/dashboard', ensureAuthenticated, (req,res) => {
   
 })
 
+
+//=====================
+
+ //render add book page
+
+//=====================
 router.get('/addBookPage', ensureAuthenticated, (req,res)=>{
   res.render('addBookPage', {newBook:''})
 })
 
-
-
-
-//=====================
-  //DELETE a json book
-//=====================
-// router.get('/deleteBook/:id', (req,res)=>{
-
-// console.log("in delete")
-//   //filter out relevant book by id
-//   fs.readFile('./models/books.json', (err, data) => {  
-//     if (err) throw err;
-//     let theBooks = JSON.parse(data);
-//     let newBooks = theBooks.filter(b =>  b.id !== parseInt(req.params.id))
-//     newBooks = JSON.stringify(newBooks, null, 4)
-  
-//     //resave the json file
-//     fs.writeFile('./models/books.json', newBooks, 'utf8', err =>{
-//       if(err) {
-//         req.flash("error_msg", `Your book may not have been deleted` );
-//       }else{
-//         req.flash("success_msg", `deleted successfully.` );
-//       }
-
-     
-//       res.redirect('/dashboard')
-//      res.send(newBooks)
-//     })  
-//   });
-// })
 
 //=====================
 
@@ -158,17 +108,7 @@ router.get('/deleteBookclient/:id', (req,res)=>{
        
         res.redirect('/dashboard')
       }else{
-        //is the book forSale (in sqldb)?
-        // if(forSale === true || forSale === 'true'){
-        //   //if so, send delete sql request
-        //   console.log("will send sql delete, shopID", shopID)
-        //   res.redirect(`/shop/removeqlbook/${shopID}`)
-          
-        // }else{
-        //   //if not, continue
-        //   console.log("will continue")
 
-        //client now handling the sql request, after it recieves new books it will request to /shop/removesqlbook/bookID`
           res.send(newBooks)
         //}
         
@@ -178,7 +118,9 @@ router.get('/deleteBookclient/:id', (req,res)=>{
 })
 
   //=====================
+
   //RENDER EDIT a json book
+
 //=====================
 router.get('/editJsonBook/:id', (req,res)=>{
   if(!req.params.id || !req.user){
@@ -196,153 +138,13 @@ router.get('/editJsonBook/:id', (req,res)=>{
 })
 
 
-// //====================================================
-
-// //EDIT Json Book (and maybe redirect to edit sql book)
-
-// //=====================================================
-// router.post('/editJsonBook/:id', (req, res)=>{
-//    const {title, author, description, price, userReview, condition}= req.body;
-//    const idToFind = parseInt(req.params.id);
-//    const latestBooks = helpers.getLatestBooks();
-//    let books;
-//    let theBook;//??
-   
- 
-//    //deal with the image first???
- 
-//    //set latest books
-//    latestBooks
-//      .then((b)=>{
-//        books = b;
-//        theBook = books.filter(b => b.id===idToFind)[0];
-//        //return theBook;  
-//    })
-//    //now books and thebook are available
-//    //deal with the image
-//  .then(()=>{
-//          //in case no image uploaded (this SHOULD never happen) and there's no google img, use default-img.png
-//          if(!req.files &&  theBook.imageurl === ''){
-//            console.log("no img uploaded ", theBook.imageurl)
-//            theBook.imageurl= 'default-img.png';
-        
-//          }
-
-//          //if the image is from googleapi, save it at bookid-img.*
-//         //  if(!req.files && (theBook.imageurl.search('http://books.google.com')) !== -1){
-//         //    console.log("it's a google image, need to save it");
-//         //    const googleImg = fs.createWriteStream(`./bookimages/img-${theBook.id}.png`);
-//         //    const url = theBook.imageurl;
-//         //   const saveGoogleImg = http.get(url, function(response) {
-//         //     response.pipe(file);
-//         //   });
-//         //  }
-//          //if an image was uploaded
-//          if(req.files){
-//            const uploadImg = req.files.uploadImg;
-//            const filename = uploadImg.name;
-//            //const extension = filename.split('.')[1];
-//           const extension = 'png'
-//            //save the new image
-//            const saveImg =
-//              new Promise((resolve,reject)=>{
-//                uploadImg.mv(`./bookimages/img-${theBook.id}.${extension}` , function(err){
-//                  if(err){
-//                    reject(res.status(500).send(err));
-//                  }
-//                   console.log("changing book to whatever they uploaded")
-//                    theBook.imageurl = `img-${theBook.id}.${extension}`; 
-//                    console.log("the book imageurl ", theBook.imageurl)
-//                    theURL = `img-${theBook.id}.${extension}`;
-//                  resolve(`img-${theBook.id}.${extension} saved`);
-//                })
-//              })
-//            //when image has saved and theBook.imageurl has been updated...
-//            //write the new books to json.
-//            saveImg.then(w=> {
-           
-//                  //write the file....
-//                   let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
-//                   const editedBooks = books;
-//                   editedBooks.splice(i,1,theBook);
-         
-                  
-//                   const updated = JSON.stringify(editedBooks, null ,4)
-//                   const writeFile = helpers.writeFile(req, updated, theBook);
-//                     theBook.title = title;
-//                     theBook.author = author; 
-//                     theBook.description = description;
-//                     theBook.price = price;
-//                     theBook.userReview = userReview;
-//                     theBook.condition = condition;
-            
-                      
-//                     writeFile.then(theBook=>{
-//                         //check if book is for sale (ie. in sqldb)
-//                         if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
-//                           //need to update book in db too!!
-//                           console.log("book is for sale, will update sql")
-//                           const string = encodeURIComponent(JSON.stringify(theBook));
-
-//                           //redirect to sql edit route
-//                           res.redirect('/shop/sqleditbook/?bookupdates=' + string);
-//                         }else{
-//                           console.log("this book is not for sale, done.")
-//                         }
-//                         req.flash("success_msg", `${theBook.title} edited successfully.` );
-//                     }).catch(err =>{
-//                       req.flash(err);
-//                         res.redirect('/dashboard')
-//                     })
-
-//            })
-           
-//          }else{
-//               //also just write the file - TODO fix this, repetitive
-//               //write the file....
-//             let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
-//            // console.log("i is ", i, " so replacing ", books[i], " with ", theBook)
-//             //const editedBooks = books.splice(i, 1, theBook);
-//             const editedBooks = books;
-//             editedBooks.splice(i,1,theBook);
-//             //console.log("putting in ", theBook, " at ", editedBooks[i])
-//             const updated = JSON.stringify(editedBooks, null ,4)
-//             //console.log("and updated is ", updated)
-//             const writeFile = helpers.writeFile(req, updated, theBook);
-
-//             theBook.title = title;
-//             theBook.author = author; //!!!TODO, What happens if they update author!!??
-//             theBook.description = description;
-//             theBook.price = price;
-//             theBook.userReview = userReview;
-//             theBook.condition = condition;
-     
-          
-//               writeFile.then(theBook=>{
-//                   //if in sqldb
-//                   if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
-//                     //update sql
-//                     const string = encodeURIComponent(JSON.stringify(theBook));
-//                     res.redirect('/shop/sqleditbook/?bookupdates=' + string);
-//                   }
-
-//                   req.flash("success_msg", `${theBook.title} edited successfully.` );
-//               }).catch(err =>{
-//                 req.flash("error_msg", `${theBook.title} error saving to db.`);
-//                   res.redirect('/dashboard')
-//               })
-//          }
-
-        
-//   })//image saved
-
-//  })
 
 //====================================================
 
-//OMFG - EDIT Json Book (and maybe redirect to edit sql book)
+// - EDIT Json Book (and maybe redirect to edit sql book)
 
 //=====================================================
+
 router.post('/editJsonBook/:id', (req, res)=>{
   const {title, author, description, price, userReview, condition}= req.body;
   const idToFind = parseInt(req.params.id);
@@ -370,21 +172,15 @@ router.post('/editJsonBook/:id', (req, res)=>{
        
         }
 
-        //if the image is from googleapi, save it at bookid-img.*
-        // if(!req.files && (theBook.imageurl.search('http://books.google.com')) !== -1){
-        //   console.log("it's a google image, need to save it");
-        //   const googleImg = fs.createWriteStream(`./bookimages/img-${theBook.id}.png`);
-        //   const url = theBook.imageurl;
-        //  const saveGoogleImg = http.get(url, function(response) {
-        //    response.pipe(file);
-        //  });
-        // }
         //if an image was uploaded
         if(req.files){
           const uploadImg = req.files.uploadImg;
           const filename = uploadImg.name;
           //const extension = filename.split('.')[1];
-         const extension = 'png'
+
+          //just use png for everything
+          const extension = 'png';
+
           //save the new image
           const saveImg =
             new Promise((resolve,reject)=>{
@@ -406,7 +202,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
           
                 //write the file....
                  let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
-                 //console.log("title and req.params.title", title, req.params.title);
+              
                  theBook.title = title;
                  theBook.author = author; 
                  theBook.description = description;
@@ -425,16 +221,16 @@ router.post('/editJsonBook/:id', (req, res)=>{
                      
                    writeFile.then(theBook=>{
                        //check if book is for sale (ie. in sqldb)
-                       console.log("Check the book here...", theBook)
+                       //console.log("Check the book here...", theBook)
                        if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
                          //need to update book in db too!!
-                         console.log("book is for sale, will update sql")
+                         //console.log("book is for sale, will update sql")
                          const string = encodeURIComponent(JSON.stringify(theBook));
 
                          //redirect to sql edit route
                          res.redirect('/shop/sqleditbook/?bookupdates=' + string);
                        }else{
-                         console.log("this book is not for sale, done.")
+                         //console.log("this book is not for sale, done.")
                          req.flash("success_msg", `${theBook.title} edited successfully.` );
                          //redirect to dashboard via checkMessages
                          res.redirect('/shop/checkMessages')
@@ -443,15 +239,16 @@ router.post('/editJsonBook/:id', (req, res)=>{
 
                    }).catch(err =>{
                      req.flash(err);
-                       res.redirect('/dashboard')
+                      res.redirect('/dashboard')
                    })
 
           })
           
         }else{
              //no file uploaded
+             //NOT DRY!!!
            let i = books.map(b => b.id).indexOf(parseInt(req.params.id));
-           console.log("title and req.params.title2", title, req.params.title)
+           //console.log("title and req.params.title2", title, req.params.title)
            theBook.title = title;
            theBook.author = author; 
            theBook.description = description;
@@ -469,7 +266,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
     
          
              writeFile.then(theBook=>{
-              console.log("Check the book here 2...", theBook)
+              //console.log("Check the book here 2...", theBook)
                  //if in sqldb
                  if(theBook.shopID && (theBook.forSale===true||theBook.forSale==='true')){
                    //update sql
@@ -478,8 +275,9 @@ router.post('/editJsonBook/:id', (req, res)=>{
                  }else{
                    console.log("not in shop")
                    req.flash("success_msg", `${theBook.title} edited successfully.` );
-                         //redirect to dashboard via checkMessages
-                         res.redirect('/shop/checkMessages')
+
+                  //redirect to dashboard via checkMessages
+                  res.redirect('/shop/checkMessages')
                  }
 
               
@@ -500,7 +298,7 @@ router.post('/editJsonBook/:id', (req, res)=>{
 //changes condition of book with id 49 to 'mediocre'
 //=====================================================
 router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
- console.log("The params to editJSon book ", req.params)
+ //console.log("The params to editJSon book ", req.params)
   const idToFind = parseInt(req.params.id);
   const latestBooks = helpers.getLatestBooks();
   latestBooks.then(books =>{
@@ -541,10 +339,7 @@ router.get('/editJsonBook/:id/:shopid/:field/:thevalue', (req, res)=>{
 router.post('/addBook', (req,res) =>{
   console.log("form submitted")
   let {title, author, description, userReview, condition, price, imageurl} = req.body;//get details from req.body
- //let uploadImg = req.files.uploadImg.name;
-
-
- // console.log(imageurl)
+ 
  const latestBooks = helpers.getLatestBooks();
  latestBooks.then(books =>{
   const newBook = {
@@ -600,9 +395,7 @@ router.post('/addBook', (req,res) =>{
     newBook.imageurl = 'default-img.png';
   }
 
-  //get the latest json data
-  //const latestBooks = helpers.getLatestBooks();
-  //latestBooks.then(books =>{
+ 
     books.push(newBook)
     const newBooks = JSON.stringify(books, null, 4)
     fs.writeFile('./models/books.json', newBooks, 'utf8', err =>{

@@ -13,8 +13,7 @@
         <%= b.authorName %></small></h5>
         <h2><%= b.userName %></h2>
       
-        <!-- <img src="/img-<%= b.bookJsonID %>.jpg" alt=""> -->
-        <!-- <p>Image from sql db:<%= b.userBookImage%></p> -->
+ 
         <img src="<%= b.userBookImage.replace(/['"]+/g, '') %>" alt="" class="thumbnail-size-img">
         
         <!-- <img src="/default-img.PNG" alt=""> -->
@@ -37,7 +36,7 @@
       <% }else{ %>
         <a href="/users/login" class="btn btn-light" disabled>Login to contact seller</a>
         <% } %>
-        <!-- <a href="/shop/addsqlbook/<%= b.id %>" class="btn btn-primary">Buy</a> -->
+    
     </div><!-- end shop item -->
     
     <% }) %>

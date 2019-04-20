@@ -3,19 +3,23 @@
 //================================
 /*
 
-1. ADD A BOOK '/addsqlbook/:id'
+ ADD A BOOK '/addsqlbook/:id'
 
-2. REMOVE A BOOK '/removesqlbook/:id'
+ REMOVE A BOOK '/removesqlbook/:id'
 
-3. GET CURRENT USERS BOOKS '/sqlallusersbooks'
+ GET CURRENT USERS BOOKS '/sqlallusersbooks'
 
-4. GET ALL BOOKS FROM DB '/'
+ GET ALL BOOKS FROM DB '/'
 
-5. EDIT A BOOK '/sqleditbook/'
+ EDIT A BOOK '/sqleditbook/'
 
-6. RENDER CONTACT SELLER PAGE
+ RENDER CONTACT SELLER PAGE
 
-7. SAVE MESSAGE FOR SELLER
+ SAVE MESSAGE FOR SELLER
+
+CHECK MESSAGES
+
+SET UP DB (connented out)
 
 */
 const express = require('express');
@@ -90,15 +94,13 @@ router.get('/addsqlbook/:id', (req,res)=>{
         })
         .then(()=>{
               //THEN save the book 
-              console.log("book being sent for sale ", bookToAdd)
+              //console.log("book being sent for sale ", bookToAdd)
               let newBook = helpers.sellBook(bookToAdd, sqldb);
               newBook
               .then(result => {
-                //console.log("book saved, will update forsale field in json,need to the the sql id here")
+               
                 //to update, can i send a request to here??
-                ///editJsonBook/:id
-                //use result.insertId
-                console.log("do i have insert id??? ", result.insertId)
+                ///editJsonBook/result.insertId
                 res.redirect(`/editJsonBook/${req.params.id}/${result.insertId}/forSale/true`)
                 
               })
@@ -112,14 +114,13 @@ router.get('/addsqlbook/:id', (req,res)=>{
         bookToAdd.authorID = a.authorID;
         
         //THEN save the book 
-       // console.log("book sent for selling (author saved already)", bookToAdd)
         let newBook = helpers.sellBook(bookToAdd, sqldb);
         newBook
         .then(result => {
           console.log("author existed, book saved, will update forsale field in json next, need id of book just saved", result.insertId);
           
           //now redirect where the json 'forSale' field will be set to true.
-  //in params send: jsonid, sqlid,field,value for field
+          //in params send: jsonid, sqlid,field,value for field
           res.redirect(`/editJsonBook/${req.params.id}/${result.insertId}/forSale/true`)
         })
         .catch(err => console.log("error saving the book:", err))
@@ -128,10 +129,6 @@ router.get('/addsqlbook/:id', (req,res)=>{
 
     
     }).catch(err=>console.log("SAVING AUTHOR RELATED ERROR CAUGHT: ",err))
-
-  //now redirect where the json 'forSale' field will be set to true.
-  //in params send: jsonid, sqlid,field,value for field
- // res.redirect(`/editJsonBook/${req.params.id}/forSale/true`)
 
   })//end of books.then, (ie get the latest json books, then do all this)
    .catch(err=>console.log("Error: ",err)) 
@@ -151,15 +148,16 @@ router.get('/removesqlbook/:id', (req,res)=>{
   let deleteAssocMsgs = helpers.deleteAssocMsgs(bookid,sqldb);
   deleteAssocMsgs
   .then(msg=>{
-    console.log("Num msgs deleted ", msg)
+    //console.log("Num msgs deleted ", msg)
     
   })
   .then(()=>{
+
     //now removing the book from the shop
-    console.log("now removing the book from the shop")
+    //console.log("now removing the book from the shop")
     let query = sqldb.query(sql,bookid, (err,result)=>{
       if(err) throw err;
-      console.log("now redirecting to get all your books")
+      //console.log("now redirecting to get all your books")
       res.redirect('/shop/sqlallusersbooks')
   })
 })
@@ -193,7 +191,7 @@ router.post('/editsqlbook/:id',(req,res)=>{
 
 //=============================================================
 
-//get all books from sql db (books for sale)
+//get ALL books from sql db (books for sale)
 
 //=============================================================
 
@@ -231,8 +229,7 @@ router.get('/sqleditbook/', (req,res)=>{
       req.flash("error_msg", `Oops! ${title} not edited.` );
       res.redirect('/dashboard')
     }
-    //console.log("authorname updated", result[0])
-    //console.log("authorname updated", result[1])
+
     req.flash("success_msg", `${title} edited successfully.` );
     res.redirect('/dashboard')
   })
@@ -242,11 +239,8 @@ router.get('/sqleditbook/', (req,res)=>{
 /*
 Render contact seller form
 */
-router.get('/contactSeller', (req,res)=>{
+router.get('/contactSeller', ensureAuthenticated, (req,res)=>{
  res.render('contactSeller');
-  //if user is not logged in redirect to login
-// console.log(req.body.msg)
-  
 })
 
 
@@ -255,7 +249,6 @@ Query the db for a book
 TODO  dont need all those params in the url!!!
 TODO - don't think this route is ever used -???
 */
-
 router.get('/contactSeller/:sellerID/:userID/:bookID',(req,res)=>{
   const bookID = req.params.bookID;
   let bookDets = helpers.findOneBook({bookID:bookID},sqldb);
@@ -266,35 +259,32 @@ router.get('/contactSeller/:sellerID/:userID/:bookID',(req,res)=>{
   }).catch(err=>console.log(err))
 })
 
-/* 
+/* ====================
 Accept a query
-*/
+======================*/
 router.get('/query/:bookID', (req,res)=>{
   const bookID = req.params.bookID;
   let bookDets = helpers.findOneBook({bookID:bookID},sqldb);
   bookDets
   .then(result=>{
-    console.log("the result ", result)
     res.send(result)
   }).catch(err=>console.log(err))
- 
 })
 
 
-/*
+/*======================
 
 Deal with contact seller form
 (save message to db)
 
-*/
+============================*/
+
 router.post('/contactSeller', (req,res)=>{
-  console.log("in contact seller")
-  //need the theMsg, bookID, sentID, forID, 
+
   const {theMsg, sentID, forID, bookID, bookTitle, sentName} = req.body;
- console.log("here: ", bookTitle, sentName)
-  const messageDets = {theMsg, sentID, forID, bookID, bookTitle, sentName}
-  console.log("dets" , messageDets)
+  const messageDets = {theMsg, sentID, forID, bookID, bookTitle, sentName};
   const saveMessage = helpers.saveMessage(messageDets, sqldb);
+
   saveMessage
   .then(result=>{
     req.flash("success_msg", `Message sent.` );
@@ -302,19 +292,21 @@ router.post('/contactSeller', (req,res)=>{
   }).catch(err => console.log("Save Msg Error: ", err))
 })
 
-router.get('/deleteMsg/:msgid', (req,res)=>{
+/*======================
+
+Delete a message
+
+============================*/
+
+router.get('/deleteMsg/:msgid', ensureAuthenticated, (req,res)=>{
   let sql = "DELETE from messages where msgID = ?";
-   // console.log(book)
+ 
    let query = sqldb.query(sql, req.params.msgid, (err,result)=>{
     if(err){
       console.log("error deleting msg: ", err);
       req.flash("error_msg", `Error deleting message.` );
       res.redirect('/dashboard');
     }else{
-      // if(!res.insertId){
-      //   console.log("no insert id !! \n\n\n\n\n", res)
-      // }
-     console.log("msg deleted");
      req.flash("success_msg", `Message deleted.` );
      res.redirect('/dashboard');
     }
@@ -339,9 +331,7 @@ router.get('/checkMessages', (req,res)=>{
   const checkMessages = helpers.checkMessages(req.user.id, sqldb);
   checkMessages
   .then(result =>{
-   // console.log("msg result ", result)
-   // res.redirect('/dashboard', {result})
-   // res.render('dashboard',{result})
+ 
    const string = encodeURIComponent(JSON.stringify(result));
   
 //redirect to sql edit route
@@ -350,7 +340,7 @@ res.redirect('/dashboard/?messages=' + string);
   })
 });
 
-//uncomment below (and uncomment helpers.exactDump()) and visit /shop/exactDump to set up the database
+//uncomment below and visit /shop/exactDump to set up the database
 
 // router.get('/exactDump', (req,res)=>{
 //   const theDB = helpers.exactDump(sqldb);
