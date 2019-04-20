@@ -8,22 +8,15 @@ const session = require('express-session');
 const passport = require('passport');
 const sqldb = require('./config/db');
 
-
-
-
-
-
 const app = express();
-
-
 
 //passport config
 require('./config/passport')(passport);
 
-//auth db
+//mongo config
 const db = require('./config/keys').MongoURI;
 
-//auth db connect
+//mongo connect
 mongoose.connect(db, {useNewUrlParser:true})
   .then( ()=> console.log("mongodb connected"))
   .catch( err => console.log("error: ", err))
@@ -63,7 +56,7 @@ app.use(passport.session());
 //flash Middleware (show msgs on redirect)
 app.use(flash());
 
-//global vars (custom middleware) can be called whenever they're needed
+//global vars can be called whenever they're needed
 app.use((req, res, next) =>{
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
@@ -85,6 +78,13 @@ app.use('/users', require('./routes/users'));
 
 //for shop/sql related routes, use shop.js
 app.use('/shop', require('./routes/shop'));
+
+//for 404s
+app.use((req,res)=>{
+   const error = new Error('Not found');
+   error.status = 404;
+   return res.render('404');
+})
 
 
 const PORT =process.env.PORT || 5000;

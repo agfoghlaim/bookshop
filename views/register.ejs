@@ -7,8 +7,8 @@
 
 <% include ./partials/messages %>
 
-<form action="/users/register" method="POST">
-  <label for="name">Name</label>
+<form action="/users/register" method="POST" class="registerForm">
+  <label for="name"><h5 class="book-cursive text-white loginRegLabel">Name</h5></label>
   <input 
   type="name"
   id="name"
@@ -17,8 +17,8 @@
   placeholder="Enter Name..."
   value="<%= typeof name != 'undefined' ? name : '' %>"
   >
-  <br>
-  <label for="email">Email</label>
+  <br><br>
+  <label for="email"><h5 class="book-cursive text-white loginRegLabel">Email</h5></label>
   <input 
   type="email"
   id="email"
@@ -27,8 +27,8 @@
   placeholder="Enter Email..."
   value="<%= typeof email != 'undefined' ? email : '' %>"
   >
-  <br>
-  <label for="password">Password</label>
+  <br><br>
+  <label for="password"><h5 class="book-cursive text-white loginRegLabel">Password</h5></label>
   <input 
   type="password"
   id="password"
@@ -37,8 +37,8 @@
   placeholder="Enter password..."
   value="<%= typeof password != 'undefined' ? password : '' %>"
   >
-  <br>
-  <label for="password2">Confirm Password</label>
+  <br><br>
+  <label for="password2"><h5 class="book-cursive text-white loginRegLabel">Confirm Password</h5></label>
   <input 
   type="password"
   id="password2"
@@ -47,8 +47,8 @@
   placeholder="Enter password again..."
   value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
   >
-  <br>
-  <button type = "submit">Register</button>
+  <br><br>
+  <button class="btn btn-sm btn-light" type = "submit">Register</button>
 </form>
 
 <p><a href="/users/login">Login</a></p>

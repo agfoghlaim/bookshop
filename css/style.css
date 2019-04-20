@@ -375,7 +375,7 @@ shop page
 
 
 /* contact form */
-.contactForm{
+.contactForm, .registerForm, .loginForm{
   background: linear-gradient(#1ba455,#1ba45594);
   padding: 2em;
   display: grid;
@@ -384,10 +384,14 @@ shop page
   box-shadow: 3px 3px 5px 6px #ccc;
 }
 
-.contact-form-group, .contact-form-container{
+.contact-form-group, .contact-form-container, .registerForm,.loginForm{
   margin:2em 0;
 }
 
-.btn{
+.loginRegLabel{
+  font-size: 2em;
+}
+
+.btn, input, textarea, select{
   border-radius: 0 !important;
 }
