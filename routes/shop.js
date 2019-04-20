@@ -288,12 +288,12 @@ Deal with contact seller form
 
 */
 router.post('/contactSeller', (req,res)=>{
-  
+  console.log("in contact seller")
   //need the theMsg, bookID, sentID, forID, 
   const {theMsg, sentID, forID, bookID, bookTitle, sentName} = req.body;
- 
+ console.log("here: ", bookTitle, sentName)
   const messageDets = {theMsg, sentID, forID, bookID, bookTitle, sentName}
-  
+  console.log("dets" , messageDets)
   const saveMessage = helpers.saveMessage(messageDets, sqldb);
   saveMessage
   .then(result=>{

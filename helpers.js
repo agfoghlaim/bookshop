@@ -140,11 +140,13 @@ module.exports = {
   checkMessages: function(userid, db){
     console.log("userid: ", userid)
     return new Promise((resolve,reject)=>{
+      
       let sql = 'SELECT * FROM messages WHERE forID = ?';
       let query = db.query(sql, userid, (err,results) => {
         if(err) {
-          reject('error finding message')
+          reject('error finding messages')
         }else{
+     
           resolve(results)
         }
       })

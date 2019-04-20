@@ -68,10 +68,7 @@ router.get('/dashboard', ensureAuthenticated, (req,res) => {
   //checkMessages redirects here with a querystring called messages
   let userMessages ='';
   if(req.query.messages){
-   // console.log("got messages ", req.query.messages)
-     //req from editjsonbook in index.js
-    // const {msgID, bookID, sentID,forID,theMsg}= JSON.parse(req.query.messages);
-   // console.log("msgs ", req.query.messages)
+
     userMessages = JSON.parse(req.query.messages); 
   }
   //get all books from the json file with current user's id

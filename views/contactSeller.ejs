@@ -27,22 +27,25 @@ here is a quick fix for the css, this view doesn't need js -->
   <input type="text" style="display:none" name="bookID" value="<%= r.bookID %>">
   <input type="text" style="display:none" name="sentID" value="<%= user.id %>">
   <input type="text" style="display:none" name="forID" value="<%= r.userID %>">
+  <input type="text" style="display:none"  name="bookTitle" value="<%= r.bookTitle %>" >
+  <input type="text" style="display:none" name="sentName" value="<%= user.name %>"  >
 
   
  
-
+  
   <div class="form-group contact-form-group">
       <label for="sentName">
         <h6 class="book-cursive text-center text-white">Name</h6>
       </label><br>
       <p class="text-center">
-          <input type="text"  name="sentName" value="<%= user.name %>" disabled>
+          <input type="text"  name="pretendName" value="<%= user.name %>" disabled >
       </p>
   </div>
 
   <div class="form-group contact-form-group">
-      <label for="sentName"><h6 class="book-cursive text-center text-white">Re:</h6></label><br>
-      <input type="text"  name="bookTitle" value="<%= r.bookTitle %>" disabled>
+      <label for="bookTitle"><h6 class="book-cursive text-center text-white">Re:</h6></label><br>
+      <input type="text"  name="pretend" value="<%= r.bookTitle %>" disabled >
+     
   </div>
 
   <div class="form-group contact-form-group">

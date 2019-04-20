@@ -175,17 +175,17 @@ if(radios){
       return;
     }
     if(e.target.value === 'ownImgConfirm'){
-      //console.log("will show thing", e.target.value);
       
       uploader.classList.remove('hide')
       thumb.classList.add('hide')
 
        //Also if they select to upload an image, add required to the upload file input
        addBookForm.uploadImg.required = true;
+
+    }else if(e.target.value = 'defaultImgConfirm'){
+
       //hide default img
       //show upload file fields
-    }else if(e.target.value = 'defaultImgConfirm'){
-      //console.log("will hide upload", e.target.value)
       addBookForm.uploadImg.required = false;
       uploader.classList.add('hide')
       thumb.classList.remove('hide')
@@ -327,7 +327,6 @@ function validateAddForm(e){
 //e.tartet.validationMessage defaults to '' for no error
 if(typeof addBookForm !== 'undefined'){
   addBookForm.addEventListener('change',function(e){
-    console.log("a chcange")
     document.getElementById(`${e.target.name}-error`).textContent = e.target.validationMessage;
   })
 }
